@@ -29,19 +29,19 @@ import retrofit2.Retrofit;
 
 public class RestaurantDataManager {
 
-
     public RestaurantDataManager() {
         restaurants = new HashMap<String, Restaurant>();
         inspections = new ArrayList<Inspection>();
         loadRestaurants();
         loadInspections();
+        addInspectionsToRestaurantsWhenDataReady();
     }
 
     public HashMap<String, Restaurant> getRestaurants() {
         return restaurants;
     }
 
-    private HashMap<String, Restaurant> loadRestaurants() {
+    private void loadRestaurants() {
         AsyncTask.execute(new Runnable() {
             @Override
             public void run() {
@@ -77,48 +77,50 @@ public class RestaurantDataManager {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-
-
+                restaurantDataLoaded = true;
             }
         });
-
-        return null;
     }
 
-    private HashMap<String, Inspection> loadInspections() {
-        // Create URL
-        URL inspectionEndpoint = null;
-        try {
-            inspectionEndpoint = new URL("http://data.surrey.ca/api/action/datastore_search?resource_id=30b38b66-649f-4507-a632-d5f6f5fe87f1&limit=200");
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
+    private void loadInspections() {
+        AsyncTask.execute(new Runnable() {
+            @Override
+            public void run() {
+                // Create URL
+                URL inspectionEndpoint = null;
+                try {
+                    inspectionEndpoint = new URL("https://data.surrey.ca/api/action/datastore_search?resource_id=30b38b66-649f-4507-a632-d5f6f5fe87f1&limit=200");
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                }
 
-        // Create connection
-        HttpsURLConnection connection = null;
-        try {
-            connection = (HttpsURLConnection) inspectionEndpoint.openConnection();
+                // Create connection
+                HttpsURLConnection connection = null;
+                try {
+                    connection = (HttpsURLConnection) inspectionEndpoint.openConnection();
 
-            if (connection.getResponseCode() == 200) {
-                InputStream responseBody = connection.getInputStream();
+                    if (connection.getResponseCode() == 200) {
+                        InputStream responseBody = connection.getInputStream();
 
-                InputStreamReader responseBodyReader =
-                        new InputStreamReader(responseBody, "UTF-8");
+                        InputStreamReader responseBodyReader =
+                                new InputStreamReader(responseBody, "UTF-8");
 
-                JsonElement rootElem = new JsonParser().parse(responseBodyReader);
-                JsonArray jsonArr = rootElem.getAsJsonObject()
-                        .getAsJsonObject("result").getAsJsonArray("records");
+                        JsonElement rootElem = new JsonParser().parse(responseBodyReader);
+                        JsonArray jsonArr = rootElem.getAsJsonObject()
+                                .getAsJsonObject("result").getAsJsonArray("records");
 
-                parseRestaurantJSON(jsonArr);
+                        parseInspectionJSON(jsonArr);
 
-                connection.disconnect();
-            } else {
-                // Throw something out the window
+                        connection.disconnect();
+                    } else {
+                        // Throw something out the window
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                inspectionDataLoaded = true;
             }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return null;
+        });
     }
 
     private void parseRestaurantJSON(JsonArray jsonArray) throws IOException {
@@ -133,7 +135,6 @@ public class RestaurantDataManager {
             trackingNumber = jsonObj.get("TRACKINGNUMBER").getAsString();
             longitude = jsonObj.get("LATITUDE").getAsDouble();
             latitude = jsonObj.get("LONGITUDE").getAsDouble();
-
             LatLng location = new LatLng(longitude, latitude);
 
             Restaurant restaurant = new Restaurant(name, trackingNumber);
@@ -166,7 +167,7 @@ public class RestaurantDataManager {
             iType = stringToInspectionType(jsonObj.get("InspType").getAsString());
 
             Inspection insp = new Inspection(trackingNumber, id);
-            insp.setInspectionDate(Date.valueOf(Integer.toString(inspectionDate)));
+            insp.setInspectionDate(new Date(inspectionDate));
             insp.setNumCritical(numCritical);
             insp.setNumNonCritical(numNonCritical);
             insp.setDescription(description);
@@ -175,6 +176,36 @@ public class RestaurantDataManager {
 
             inspections.add(insp);
         }
+    }
+
+    private void addInspectionsToRestaurantsWhenDataReady() {
+
+        AsyncTask.execute(new Runnable() {
+            @Override
+            public void run() {
+                Boolean finished = false;
+                while (!finished) {
+
+                    // data not ready yet
+                    if (!(inspectionDataLoaded && restaurantDataLoaded)) {
+                        try {
+                            Thread.sleep(1000);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        continue; // Start another loop
+                    }
+
+                    for (Inspection insp : inspections) {
+                        Restaurant rest = restaurants.get(insp.getTrackingNumber());
+                        if (rest != null)
+                            rest.addInspection(insp);
+                    }
+
+                    finished = true; // Stop loop
+                }
+            }
+        });
     }
 
     private InspectionType stringToInspectionType(String insp) {
@@ -203,4 +234,6 @@ public class RestaurantDataManager {
 
     private HashMap<String, Restaurant> restaurants;
     private ArrayList<Inspection> inspections;
+    private Boolean restaurantDataLoaded = false;
+    private Boolean inspectionDataLoaded = false;
 }
