@@ -17,6 +17,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Dictionary;
 import java.util.HashMap;
 import java.util.List;
@@ -30,11 +31,15 @@ public class RestaurantDataManager {
 
     public RestaurantDataManager() {
         restaurants = new HashMap<String, Restaurant>();
+        restaurantList = new ArrayList<>();
         loadRestaurants();
     }
 
     public HashMap<String, Restaurant> getRestaurants() {
         return restaurants;
+    }
+    public List<Restaurant> getRestaurantList() {
+        return restaurantList;
     }
 
     private HashMap<String, Restaurant> loadRestaurants() {
@@ -84,6 +89,8 @@ public class RestaurantDataManager {
     private void parseRestaurantJSON(JsonArray jsonArray) throws IOException {
         String name;
         String trackingNumber;
+        String address;
+        String city;
         double latitude;
         double longitude;
 
@@ -91,19 +98,22 @@ public class RestaurantDataManager {
             final JsonObject jsonObj = objElem.getAsJsonObject();
             name = jsonObj.get("NAME").getAsString();
             trackingNumber = jsonObj.get("TRACKINGNUMBER").getAsString();
+            address = jsonObj.get("PHYSICALADDRESS").getAsString();
+            city = jsonObj.get("PHYSICALCITY").getAsString();
             longitude = jsonObj.get("LATITUDE").getAsDouble();
             latitude = jsonObj.get("LONGITUDE").getAsDouble();
 
             LatLng location = new LatLng(longitude, latitude);
 
-            Restaurant restaurant = new Restaurant(name, trackingNumber);
+            Restaurant restaurant = new Restaurant(name, trackingNumber, address, city);
             restaurant.setLocation(location);
 
             restaurants.put(trackingNumber, restaurant);
+            restaurantList.add(restaurant);
         }
-
     }
 
     private HashMap<String, Restaurant> restaurants;
     private HashMap<String, Inspection> inspections;
+    private List<Restaurant> restaurantList;
 }
