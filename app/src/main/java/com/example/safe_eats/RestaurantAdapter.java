@@ -1,6 +1,7 @@
 package com.example.safe_eats;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
 public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.ViewHolder> {
+
+    private static final String COLOR_LOW = "#2dc937";
+    private static final String COLOR_MODERATE = "#e7b416";
+    private static final String COLOR_HIGH = "#cc3232";
 
     private List<Restaurant> list;
     private OnRestaurantClickListener onRestaurantClickListener;
@@ -71,15 +76,34 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.Vi
         TextView textViewAddr = viewholder.tvAddr;
         TextView textViewInspection = viewholder.tvInspect;
 
+        HazardRating hazardRating = HazardRating.Low; // TODO hardcoded, replace.
+
         textViewName.setText(restaurant.getName());
         textViewAddr.setText(restaurant.getAddress());
-        textViewInspection.setText("GOOD"); // TODO Replace with inspection condition
+        textViewInspection.setText(hazardRating.toString());
 
         // TODO Add color scheme for inspection condition.
+
+
+        switch (hazardRating) {
+            case Low:
+                textViewInspection.setTextColor(Color.parseColor(COLOR_LOW));
+                break;
+            case Moderate:
+                textViewInspection.setTextColor(Color.parseColor(COLOR_MODERATE));
+                break;
+            default:
+                textViewInspection.setTextColor(Color.parseColor(COLOR_HIGH));
+        }
+
     }
 
     @Override
     public int getItemCount() {
         return list.size();
+    }
+
+    public void setList(List<Restaurant> newList) {
+        list = newList;
     }
 }

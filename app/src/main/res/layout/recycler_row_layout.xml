@@ -41,7 +41,7 @@
         android:id="@+id/tvRestaurantCondition"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:textSize="@dimen/heading1_text_size"
+        android:textSize="25dp"
         android:gravity="center"
         android:text="GOOD"/>
 

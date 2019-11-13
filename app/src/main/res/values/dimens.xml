@@ -1,15 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="fab_margin">16dp</dimen>
-    <dimen name="heading1_text_size">25sp</dimen>
-    <dimen name="heading2_text_size">15sp</dimen>
-    <dimen name="dialogTextSize">17sp</dimen>
-    <dimen name="dialogRowMargin">5dp</dimen>
-    <dimen name="dialogRowHeight">50dp</dimen>
-    <dimen name="spaceMargin">10dp</dimen>
-    <dimen name="dialogPadding">10dp</dimen>
-    <dimen name="bigButtonWidth">350dp</dimen>
-    <dimen name="backBtnWidth">30dp</dimen>
-    <dimen name="dialogTablePadding">20dp</dimen>
-    <dimen name="dialogTitleBarPadding">8dp</dimen>
+
 </resources>
