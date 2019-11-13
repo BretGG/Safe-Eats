@@ -17,6 +17,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Dictionary;
 import java.util.HashMap;
 import java.util.List;
@@ -30,11 +31,15 @@ public class RestaurantDataManager {
 
     public RestaurantDataManager() {
         restaurants = new HashMap<String, Restaurant>();
+        restaurantList = new ArrayList<>();
         loadRestaurants();
     }
 
     public HashMap<String, Restaurant> getRestaurants() {
         return restaurants;
+    }
+    public List<Restaurant> getRestaurantList() {
+        return restaurantList;
     }
 
     private HashMap<String, Restaurant> loadRestaurants() {
@@ -81,29 +86,65 @@ public class RestaurantDataManager {
         return null;
     }
 
+    /**
+     * Method to remove unnecessary parts of the name of restaurants
+     * ex. 7-Eleven #123 -> 7-Eleven
+     *
+     * @param name
+     * @return
+     */
+    private String processName(String name) {
+        int toRemoveS = 0; // start of to remove char
+        int toRemoveE = 0; // end of to remove char
+        boolean getRemoveE = false; // start looking for end of remove char
+
+        for (int i = 0; i < name.length(); i++) {
+            if (!getRemoveE && name.charAt(i) == '#') {
+                toRemoveS = i;
+                getRemoveE = true;
+            } else if (getRemoveE && (name.charAt(i) == ')' || name.charAt(i) == '(')) {
+                toRemoveE = i - 1;
+                break;
+            }
+        }
+
+        if (toRemoveS == 0) {
+            return name;
+        } else if (toRemoveE == 0) {
+            return name.substring(0, toRemoveS);
+        } else {
+            return name.substring(0, toRemoveS) + name.substring(toRemoveE);
+        }
+    }
+
     private void parseRestaurantJSON(JsonArray jsonArray) throws IOException {
         String name;
         String trackingNumber;
+        String address;
+        String city;
         double latitude;
         double longitude;
 
         for (final JsonElement objElem : jsonArray) {
             final JsonObject jsonObj = objElem.getAsJsonObject();
-            name = jsonObj.get("NAME").getAsString();
+            name = processName(jsonObj.get("NAME").getAsString());
             trackingNumber = jsonObj.get("TRACKINGNUMBER").getAsString();
+            address = jsonObj.get("PHYSICALADDRESS").getAsString();
+            city = jsonObj.get("PHYSICALCITY").getAsString();
             longitude = jsonObj.get("LATITUDE").getAsDouble();
             latitude = jsonObj.get("LONGITUDE").getAsDouble();
 
             LatLng location = new LatLng(longitude, latitude);
 
-            Restaurant restaurant = new Restaurant(name, trackingNumber);
+            Restaurant restaurant = new Restaurant(name, trackingNumber, address, city);
             restaurant.setLocation(location);
 
             restaurants.put(trackingNumber, restaurant);
+            restaurantList.add(restaurant);
         }
-
     }
 
     private HashMap<String, Restaurant> restaurants;
     private HashMap<String, Inspection> inspections;
+    private List<Restaurant> restaurantList;
 }
