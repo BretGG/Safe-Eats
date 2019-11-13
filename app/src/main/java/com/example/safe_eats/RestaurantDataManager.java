@@ -86,6 +86,37 @@ public class RestaurantDataManager {
         return null;
     }
 
+    /**
+     * Method to remove unnecessary parts of the name of restaurants
+     * ex. 7-Eleven #123 -> 7-Eleven
+     *
+     * @param name
+     * @return
+     */
+    private String processName(String name) {
+        int toRemoveS = 0; // start of to remove char
+        int toRemoveE = 0; // end of to remove char
+        boolean getRemoveE = false; // start looking for end of remove char
+
+        for (int i = 0; i < name.length(); i++) {
+            if (!getRemoveE && name.charAt(i) == '#') {
+                toRemoveS = i;
+                getRemoveE = true;
+            } else if (getRemoveE && (name.charAt(i) == ')' || name.charAt(i) == '(')) {
+                toRemoveE = i - 1;
+                break;
+            }
+        }
+
+        if (toRemoveS == 0) {
+            return name;
+        } else if (toRemoveE == 0) {
+            return name.substring(0, toRemoveS);
+        } else {
+            return name.substring(0, toRemoveS) + name.substring(toRemoveE);
+        }
+    }
+
     private void parseRestaurantJSON(JsonArray jsonArray) throws IOException {
         String name;
         String trackingNumber;
@@ -96,7 +127,7 @@ public class RestaurantDataManager {
 
         for (final JsonElement objElem : jsonArray) {
             final JsonObject jsonObj = objElem.getAsJsonObject();
-            name = jsonObj.get("NAME").getAsString();
+            name = processName(jsonObj.get("NAME").getAsString());
             trackingNumber = jsonObj.get("TRACKINGNUMBER").getAsString();
             address = jsonObj.get("PHYSICALADDRESS").getAsString();
             city = jsonObj.get("PHYSICALCITY").getAsString();
