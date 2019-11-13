@@ -7,10 +7,12 @@ import com.google.gson.annotations.SerializedName;
 import java.util.ArrayList;
 
 public class Restaurant {
-    public Restaurant(String name, String trackingNumber) {
+    public Restaurant(String name, String trackingNumber, String address, String city) {
         setName(name);
         setTrackingNumber(trackingNumber);
         this.inspections = new ArrayList<Inspection>();
+        this.address = address;
+        this.city = city;
     }
 
     private LatLng location;
@@ -18,10 +20,10 @@ public class Restaurant {
     private String name;
     @SerializedName("TRACKINGNUMBER")
     private String trackingNumber;
-    @SerializedName("CITY")
-    private String city;
     @SerializedName("ADDRESS")
     private String address;
+    @SerializedName("CITY")
+    private String city;
 
     private ArrayList<Inspection> inspections;
 
