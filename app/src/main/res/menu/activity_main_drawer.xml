@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view"
+    android:id = "@+id/view">
+
+    <item android:title="View">
+        <group
+            android:checkableBehavior="all"
+            android:title="View">
+            <item
+                android:id="@+id/mapView"
+                android:title="@string/map_view" />
+            <item
+                android:id="@+id/listView"
+                android:title="@string/list_view" />
+        </group>
+    </item>
+
+</menu>
