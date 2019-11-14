@@ -75,13 +75,14 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.Vi
         TextView textViewName = viewholder.tvName;
         TextView textViewAddr = viewholder.tvAddr;
         TextView textViewInspection = viewholder.tvInspect;
-
-        HazardRating hazardRating = HazardRating.Low; // TODO hardcoded, replace.
+        HazardRating hazardRating = HazardRating.NoResult;
+        if(restaurant.getInspections().size() >0){
+            hazardRating = restaurant.getInspections().get(0).getHazardRating();
+        }
 
         textViewName.setText(restaurant.getName());
         textViewAddr.setText(restaurant.getAddress());
         textViewInspection.setText(hazardRating.toString());
-
         // TODO Add color scheme for inspection condition.
 
 
@@ -92,6 +93,8 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.Vi
             case Moderate:
                 textViewInspection.setTextColor(Color.parseColor(COLOR_MODERATE));
                 break;
+            case NoResult:
+                textViewInspection.setTextColor(Color.BLACK);
             default:
                 textViewInspection.setTextColor(Color.parseColor(COLOR_HIGH));
         }

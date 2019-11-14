@@ -4,7 +4,7 @@ import java.util.Date;
 
 enum InspectionType {Routine, Followup};
 
-enum HazardRating {Low, Moderate, High}
+enum HazardRating {Low, Moderate, High, NoResult}
 
 public class Inspection {
     public Inspection(String trackingNumber, int id) {
