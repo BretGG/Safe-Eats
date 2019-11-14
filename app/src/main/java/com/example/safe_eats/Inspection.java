@@ -13,15 +13,15 @@ public class Inspection {
     }
 
     private int numCritical;
-    private HazardRating hazardRating;
     private int numNonCritical;
-    private Date inspectionDate;
-    private float rank;
     private int count;
-    private InspectionType inspectionType;
+    private int id;
+    private float rank;
     private String description;
     private String trackingNumber;
-    private int id;
+    private Date inspectionDate;
+    private HazardRating hazardRating;
+    private InspectionType inspectionType;
 
     public int getNumCritical() {
         return numCritical;
