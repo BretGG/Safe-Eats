@@ -20,7 +20,7 @@ import java.util.List;
 
 public class RestaurantListFragment extends Fragment implements RestaurantAdapter.OnRestaurantClickListener {
 
-    RestaurantDataManager manager;
+    RestaurantDataManager manager = MapsActivity.manager;
     RecyclerView rvRestaurant;
     LinearLayoutManager layoutManager;
     RestaurantAdapter adapter;
