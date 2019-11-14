@@ -10,5 +10,9 @@
     <string name="action_settings">Settings</string>
     <string name="drawer_open">Open Drawer</string>
     <string name="drawer_close">Close Drawer</string>
+    <string name="placeholder">Text</string>
+    <string name="inspection_year_label">Inspection Year:</string>
+    <string name="hazardous_label">Hazardous:</string>
+    <string name="description_label">Description</string>
 
 </resources>
