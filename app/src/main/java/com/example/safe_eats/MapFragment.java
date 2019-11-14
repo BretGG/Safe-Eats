@@ -6,15 +6,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProviders;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -123,7 +119,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
         Restaurant restaurant= (Restaurant) marker.getTag();
         String content  = marker.getTitle() + '\n' + restaurant.getAddress();
         if(restaurant.getInspections().size() != 0){
-            content += restaurant.getInspections().get(0).getHazardRating();
+            content += "" + "\t\t\t" + restaurant.getInspections().get(0).getHazardRating();
         }
         MapsActivity.rest_detail.setText(content);
         Log.d("Tag", marker.getTitle());
