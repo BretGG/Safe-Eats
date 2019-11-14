@@ -1,13 +1,8 @@
 package com.example.safe_eats;
 
 import android.os.AsyncTask;
-import android.util.JsonReader;
-import android.widget.ArrayAdapter;
-import android.widget.Toast;
 
-import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -19,18 +14,13 @@ import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.sql.Date;
-import java.time.Year;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Dictionary;
 import java.util.HashMap;
 import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import javax.net.ssl.HttpsURLConnection;
-
-import retrofit2.Retrofit;
 
 public class RestaurantDataManager {
 

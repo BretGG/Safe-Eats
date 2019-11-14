@@ -20,8 +20,6 @@ import java.util.List;
 
 public class RestaurantListViewActivity extends AppCompatActivity implements RestaurantAdapter.OnRestaurantClickListener {
 
-    private List<Restaurant> restaurantsList;
-
     RestaurantDataManager manager;
     RecyclerView rvRestaurant;
     LinearLayoutManager layoutManager;
@@ -44,7 +42,7 @@ public class RestaurantListViewActivity extends AppCompatActivity implements Res
             e.printStackTrace();
         }
 
-        restaurantsList = manager.getRestaurantList();
+        List<Restaurant>restaurantsList = manager.getRestaurantList();
         rvRestaurant = findViewById(R.id.rvRestaurant);
         layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
 
