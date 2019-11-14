@@ -62,6 +62,16 @@ public class RestaurantDataManager {
         return returnList;
     }
 
+    static public void waitForInitialization() {
+        while (!initialized) {
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
     static private Boolean checkDistance(Restaurant restaurant, double distanceM, LatLng startingLoc) {
         LatLng loc = restaurant.getLocation();
 
@@ -82,7 +92,7 @@ public class RestaurantDataManager {
                 // Create URL
                 URL restaurantEndpoint = null;
                 try {
-                    restaurantEndpoint = new URL("https://data.surrey.ca/api/action/datastore_search?resource_id=0e5d04a2-be9b-40fe-8de2-e88362ea916b");
+                    restaurantEndpoint = new URL("https://data.surrey.ca/api/action/datastore_search?resource_id=0e5d04a2-be9b-40fe-8de2-e88362ea916b&limit=10000");
                 } catch (MalformedURLException e) {
                     e.printStackTrace();
                 }
@@ -123,7 +133,7 @@ public class RestaurantDataManager {
                 // Create URL
                 URL inspectionEndpoint = null;
                 try {
-                    inspectionEndpoint = new URL("https://data.surrey.ca/api/action/datastore_search?resource_id=30b38b66-649f-4507-a632-d5f6f5fe87f1&limit=500");
+                    inspectionEndpoint = new URL("https://data.surrey.ca/api/action/datastore_search?resource_id=30b38b66-649f-4507-a632-d5f6f5fe87f1&limit=10000");
                 } catch (MalformedURLException e) {
                     e.printStackTrace();
                 }
@@ -214,7 +224,7 @@ public class RestaurantDataManager {
         for (final JsonElement objElem : jsonArray) {
             final JsonObject jsonObj = objElem.getAsJsonObject();
             name = processName(jsonObj.get("NAME").getAsString());
-            trackingNumber = jsonObj.get("TRACKINGNUMBER").getAsString();
+            trackingNumber = jsonObj.get("TRACKINGNUMBER").getAsString().trim();
             address = jsonObj.get("PHYSICALADDRESS").getAsString();
             city = jsonObj.get("PHYSICALCITY").getAsString();
             longitude = jsonObj.get("LATITUDE").getAsDouble();
@@ -248,7 +258,7 @@ public class RestaurantDataManager {
             inspectionDate = jsonObj.get("InspectionDate").getAsInt();
             numCritical = jsonObj.get("NumCritical").getAsInt();
             numNonCritical = jsonObj.get("NumNonCritical").getAsInt();
-            trackingNumber = jsonObj.get("TrackingNumber").getAsString();
+            trackingNumber = jsonObj.get("TrackingNumber").getAsString().trim();
             description = jsonObj.get("ViolLump").getAsString();
             hRating = stringToHazard(jsonObj.get("HazardRating").getAsString());
             iType = stringToInspectionType(jsonObj.get("InspType").getAsString());
@@ -282,8 +292,7 @@ public class RestaurantDataManager {
         AsyncTask.execute(new Runnable() {
             @Override
             public void run() {
-                Boolean finished = false;
-                while (!finished) {
+                while (!initialized) {
 
                     // data not ready yet
                     if (!(inspectionDataLoaded && restaurantDataLoaded)) {
@@ -301,7 +310,7 @@ public class RestaurantDataManager {
                             rest.addInspection(insp);
                     }
 
-                    finished = true; // Stop loop
+                    initialized = true; // Stop loop
                 }
             }
         });
@@ -335,5 +344,6 @@ public class RestaurantDataManager {
     static private ArrayList<Inspection> inspections;
     static private Boolean restaurantDataLoaded = false;
     static private Boolean inspectionDataLoaded = false;
+    static private Boolean initialized = false;
     static private double MetToDegreeEst = 111111;
 }
