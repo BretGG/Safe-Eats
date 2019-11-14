@@ -14,6 +14,7 @@ import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.sql.Date;
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -25,9 +26,10 @@ import java.util.stream.Collectors;
 
 import javax.net.ssl.HttpsURLConnection;
 
+
 public class RestaurantDataManager {
 
-     static public void initializeRestaurantDataManager() {
+    static public void initializeRestaurantDataManager() {
         restaurants = new HashMap<String, Restaurant>();
         inspections = new ArrayList<Inspection>();
         loadRestaurants();
@@ -43,12 +45,12 @@ public class RestaurantDataManager {
         return new ArrayList<>(restaurants.values());
     }
 
-    static public List<Restaurant> getRestaurants(final HazardRating recentRating, double distance) {
+    static public List<Restaurant> getRestaurants(final HazardRating recentRating, final double distance, final LatLng startingLoc) {
         List<Object> holder = restaurants.values().stream().filter(new Predicate<Restaurant>() {
             @Override
             public boolean test(Restaurant restaurant) {
                 return restaurant.getInspections().get(0).getHazardRating() == recentRating
-                        && checkDistance(restaurant, -1);
+                        && checkDistance(restaurant, distance, startingLoc);
             }
         }).collect(Collectors.toList());
 
@@ -60,9 +62,16 @@ public class RestaurantDataManager {
         return returnList;
     }
 
-    static private Boolean checkDistance(Restaurant restaurant, double distance) {
-        // TODO: Check distance
-        return true;
+    static private Boolean checkDistance(Restaurant restaurant, double distanceM, LatLng startingLoc) {
+        LatLng loc = restaurant.getLocation();
+
+        double latDist = distanceM/MetToDegreeEst;
+        double longDist = distanceM * Math.cos(loc.latitude)/MetToDegreeEst;
+
+        Boolean inLat = Math.abs(startingLoc.latitude - loc.latitude) <= latDist;
+        Boolean inDist = Math.abs(startingLoc.longitude - loc.longitude) <= longDist;
+
+        return inLat && inDist;
     }
 
 
@@ -326,4 +335,5 @@ public class RestaurantDataManager {
     static private ArrayList<Inspection> inspections;
     static private Boolean restaurantDataLoaded = false;
     static private Boolean inspectionDataLoaded = false;
+    static private double MetToDegreeEst = 111111;
 }
