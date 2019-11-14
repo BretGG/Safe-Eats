@@ -14,7 +14,10 @@ import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.sql.Date;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.function.Predicate;
@@ -111,7 +114,7 @@ public class RestaurantDataManager {
                 // Create URL
                 URL inspectionEndpoint = null;
                 try {
-                    inspectionEndpoint = new URL("https://data.surrey.ca/api/action/datastore_search?resource_id=30b38b66-649f-4507-a632-d5f6f5fe87f1&limit=200");
+                    inspectionEndpoint = new URL("https://data.surrey.ca/api/action/datastore_search?resource_id=30b38b66-649f-4507-a632-d5f6f5fe87f1&limit=500");
                 } catch (MalformedURLException e) {
                     e.printStackTrace();
                 }
@@ -198,6 +201,8 @@ public class RestaurantDataManager {
         double latitude;
         double longitude;
 
+        restaurants.clear();
+
         for (final JsonElement objElem : jsonArray) {
             final JsonObject jsonObj = objElem.getAsJsonObject();
             name = processName(jsonObj.get("NAME").getAsString());
@@ -225,6 +230,9 @@ public class RestaurantDataManager {
         HazardRating hRating;
         InspectionType iType;
 
+        inspections.clear();
+        SimpleDateFormat formatDate = new SimpleDateFormat("yyyyMMdd");
+
         for (final JsonElement objElem : jsonArray) {
             final JsonObject jsonObj = objElem.getAsJsonObject();
 
@@ -238,15 +246,27 @@ public class RestaurantDataManager {
             iType = stringToInspectionType(jsonObj.get("InspType").getAsString());
 
             Inspection insp = new Inspection(trackingNumber, id);
-            insp.setInspectionDate(new Date(inspectionDate));
             insp.setNumCritical(numCritical);
             insp.setNumNonCritical(numNonCritical);
             insp.setDescription(description);
             insp.setHazardRating(hRating);
             insp.setInspectionType(iType);
 
+            try {
+                insp.setInspectionDate(formatDate.parse(Integer.toString(inspectionDate)));
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
             inspections.add(insp);
         }
+
+        inspections.sort(new Comparator<Inspection>() {
+            @Override
+            public int compare(Inspection o1, Inspection o2) {
+                return o1.getInspectionDate().compareTo(o2.getInspectionDate());
+            }
+        });
     }
 
     private void addInspectionsToRestaurantsWhenDataReady() {
