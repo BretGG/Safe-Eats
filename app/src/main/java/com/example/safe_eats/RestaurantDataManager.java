@@ -305,7 +305,7 @@ public class RestaurantDataManager {
             case "Low":
                 return HazardRating.Low;
             case "Moderate":
-                return HazardRating.Medium;
+                return HazardRating.Moderate;
             case "High":
                 return HazardRating.High;
             default:
@@ -314,6 +314,7 @@ public class RestaurantDataManager {
     }
 
     private HashMap<String, Restaurant> restaurants;
+    private List<Restaurant> restaurantList;
     private ArrayList<Inspection> inspections;
     private Boolean restaurantDataLoaded = false;
     private Boolean inspectionDataLoaded = false;
