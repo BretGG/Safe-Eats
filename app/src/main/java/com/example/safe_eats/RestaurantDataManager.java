@@ -51,8 +51,28 @@ public class RestaurantDataManager {
         List<Object> holder = restaurants.values().stream().filter(new Predicate<Restaurant>() {
             @Override
             public boolean test(Restaurant restaurant) {
-                return restaurant.getInspections().get(0).getHazardRating() == recentRating
-                        && checkDistance(restaurant, distance, startingLoc);
+                if (restaurant.getInspections().size() > 0) {
+                    return restaurant.getInspections().get(0).getHazardRating() == recentRating
+                            && checkDistance(restaurant, distance, startingLoc);
+                } else {
+                    return false;
+                }
+            }
+        }).collect(Collectors.toList());
+
+        ArrayList<Restaurant> returnList = new ArrayList<>();
+        for (Object r : holder) {
+            returnList.add((Restaurant) r);
+        }
+
+        return returnList;
+    }
+
+    static public List<Restaurant> getRestaurants(final double distance, final LatLng startingLoc) {
+        List<Object> holder = restaurants.values().stream().filter(new Predicate<Restaurant>() {
+            @Override
+            public boolean test(Restaurant restaurant) {
+                return checkDistance(restaurant, distance, startingLoc);
             }
         }).collect(Collectors.toList());
 
@@ -77,8 +97,8 @@ public class RestaurantDataManager {
     static private Boolean checkDistance(Restaurant restaurant, double distanceM, LatLng startingLoc) {
         LatLng loc = restaurant.getLocation();
 
-        double latDist = distanceM/MetToDegreeEst;
-        double longDist = distanceM * Math.cos(loc.latitude)/MetToDegreeEst;
+        double latDist = distanceM / MetToDegreeEst;
+        double longDist = distanceM * Math.cos(loc.latitude) / MetToDegreeEst;
 
         Boolean inLat = Math.abs(startingLoc.latitude - loc.latitude) <= latDist;
         Boolean inDist = Math.abs(startingLoc.longitude - loc.longitude) <= longDist;
