@@ -155,6 +155,20 @@ public class RestaurantDataManager {
         });
     }
 
+    public List<Restaurant> filterByName(String name) {
+        List<Restaurant> filteredList = new ArrayList<>();
+
+        for (Restaurant res : restaurantList) {
+            String rName = res.getName().toLowerCase();
+
+            if (rName.contains(name.toLowerCase())) {
+                filteredList.add(res);
+            }
+        }
+
+        return filteredList;
+    }
+
     /**
      * Method to remove unnecessary parts of the name of restaurants
      * ex. 7-Eleven #123 -> 7-Eleven
@@ -291,7 +305,7 @@ public class RestaurantDataManager {
             case "Low":
                 return HazardRating.Low;
             case "Moderate":
-                return HazardRating.Medium;
+                return HazardRating.Moderate;
             case "High":
                 return HazardRating.High;
             default:
@@ -300,6 +314,7 @@ public class RestaurantDataManager {
     }
 
     private HashMap<String, Restaurant> restaurants;
+    private List<Restaurant> restaurantList;
     private ArrayList<Inspection> inspections;
     private Boolean restaurantDataLoaded = false;
     private Boolean inspectionDataLoaded = false;
