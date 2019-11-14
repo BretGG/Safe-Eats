@@ -6,6 +6,7 @@
 
     https://console.developers.google.com/flows/enableapi?apiid=maps_android_backend&keyType=CLIENT_SIDE_ANDROID&r=11:2F:C0:CF:F4:A9:22:5E:8D:6D:79:CB:EA:5C:71:22:59:2A:68:6F%3Bcom.example.safe_eats
 
+
     You can also add your credentials to an existing key, using these values:
 
     Package name:
@@ -22,5 +23,6 @@
     -->
 
     <string name="google_maps_key" templateMergeStrategy="preserve" translatable="false">AIzaSyBge9h6beebilaYHf9J0_QfAj6KpvSz8ZI</string>
+
 
 </resources>

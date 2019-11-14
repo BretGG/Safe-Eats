@@ -86,6 +86,20 @@ public class RestaurantDataManager {
         return null;
     }
 
+    public List<Restaurant> filterByName(String name) {
+        List<Restaurant> filteredList = new ArrayList<>();
+
+        for (Restaurant res : restaurantList) {
+            String rName = res.getName().toLowerCase();
+
+            if (rName.contains(name.toLowerCase())) {
+                filteredList.add(res);
+            }
+        }
+
+        return filteredList;
+    }
+
     /**
      * Method to remove unnecessary parts of the name of restaurants
      * ex. 7-Eleven #123 -> 7-Eleven
