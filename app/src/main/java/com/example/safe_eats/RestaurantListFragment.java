@@ -22,27 +22,20 @@ public class RestaurantListFragment extends Fragment implements RestaurantAdapte
 
     private List<Restaurant> restaurantsList;
 
-    RestaurantDataManager manager;
-    RecyclerView rvRestaurant;
-    LinearLayoutManager layoutManager;
-    RestaurantAdapter adapter;
+    private RestaurantDataManager manager = MapsActivity.manager;
+    private RecyclerView rvRestaurant;
+    private LinearLayoutManager layoutManager;
+    private RestaurantAdapter adapter;
 
     EditText etSearchKeyword;
 
-    public View onCreateView(@NonNull LayoutInflater inflater,
-                             ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
         View v = inflater.inflate(R.layout.fragment_list, container, false);
 
         // TODO Replace commented section with the actual keyword search EditText and Button widget
 //        etSearchKeyword = v.findViewById(R.id.etKeywordSearch);
 //        Button btnSearch = v.findViewById(R.id.btnKeywordSearch);
-
-        manager = new RestaurantDataManager();
-        try {
-            Thread.sleep(5000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
 
         restaurantsList = manager.getRestaurantList();
         rvRestaurant = v.findViewById(R.id.rvRestaurant);

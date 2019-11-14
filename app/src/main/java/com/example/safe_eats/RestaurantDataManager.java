@@ -157,8 +157,9 @@ public class RestaurantDataManager {
 
     public List<Restaurant> filterByName(String name) {
         List<Restaurant> filteredList = new ArrayList<>();
+        List<Restaurant> list = getRestaurantList();
 
-        for (Restaurant res : restaurantList) {
+        for (Restaurant res : list) {
             String rName = res.getName().toLowerCase();
 
             if (rName.contains(name.toLowerCase())) {
@@ -314,7 +315,6 @@ public class RestaurantDataManager {
     }
 
     private HashMap<String, Restaurant> restaurants;
-    private List<Restaurant> restaurantList;
     private ArrayList<Inspection> inspections;
     private Boolean restaurantDataLoaded = false;
     private Boolean inspectionDataLoaded = false;

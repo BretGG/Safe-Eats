@@ -76,14 +76,18 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.Vi
         TextView textViewAddr = viewholder.tvAddr;
         TextView textViewInspection = viewholder.tvInspect;
 
-        HazardRating hazardRating = HazardRating.Low; // TODO hardcoded, replace.
+        Inspection latestInspection = restaurant.getLatestInspection();
+        HazardRating hazardRating;
+
+        if (latestInspection == null) {
+            hazardRating = HazardRating.Low;
+        } else {
+            hazardRating = latestInspection.getHazardRating();
+        }
 
         textViewName.setText(restaurant.getName());
         textViewAddr.setText(restaurant.getAddress());
         textViewInspection.setText(hazardRating.toString());
-
-        // TODO Add color scheme for inspection condition.
-
 
         switch (hazardRating) {
             case Low:
