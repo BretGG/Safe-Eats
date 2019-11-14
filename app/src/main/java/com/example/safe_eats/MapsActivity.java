@@ -27,7 +27,7 @@ public class MapsActivity extends AppCompatActivity  {
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-        manager = new RestaurantDataManager();
+        RestaurantDataManager.initializeRestaurantDataManager();
         try {
             Thread.sleep(2000);
         } catch (InterruptedException e) {
