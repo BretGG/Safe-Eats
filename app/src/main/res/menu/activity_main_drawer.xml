@@ -9,10 +9,10 @@
             android:checkableBehavior="all"
             android:title="View">
             <item
-                android:id="@+id/mapView"
+                android:id="@+id/nav_map"
                 android:title="@string/map_view" />
             <item
-                android:id="@+id/listView"
+                android:id="@+id/nav_list"
                 android:title="@string/list_view" />
         </group>
     </item>

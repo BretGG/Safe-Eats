@@ -21,11 +21,12 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.HashMap;
 
-public class MapFragment extends Fragment implements OnMapReadyCallback {
+public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
     private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 100;
     private boolean mLocationPermissionGranted = false;
     GoogleMap mMap;
@@ -37,7 +38,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         SupportMapFragment mapfragment = (SupportMapFragment)getChildFragmentManager().findFragmentById(R.id.map);
         mapfragment.getMapAsync(this);
 
-
         return v;
     }
 
@@ -48,9 +48,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         getLocationPermission();
 
         LatLng surreyCentral = new LatLng(49.1896, -122.8479);
-        MarkerOptions option = new MarkerOptions();
-        option.position(surreyCentral).title("Surrey Central") ;
-        mMap.addMarker(option);
+
 
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(surreyCentral,15));
         updateLocationUI();
@@ -60,6 +58,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             mMap.addMarker(new MarkerOptions()
                     .position(holder.getLocation()).title(holder.getName()));
         }
+        mMap.setOnMarkerClickListener(this);
     }
     private void getLocationPermission() {
         /*
@@ -112,6 +111,14 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         } catch (SecurityException e)  {
             Log.e("Exception: %s", e.getMessage());
         }
+    }
+
+    @Override
+    public boolean onMarkerClick(Marker marker) {
+        MapsActivity.rest_detail.setVisibility(View.VISIBLE);
+        MapsActivity.rest_detail.setText(marker.getTitle());
+        Log.d("Tag", marker.getTitle());
+        return false;
     }
 }
 
