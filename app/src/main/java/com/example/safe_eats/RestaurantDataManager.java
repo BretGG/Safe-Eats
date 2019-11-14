@@ -18,10 +18,14 @@ import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.sql.Date;
+import java.time.Year;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Dictionary;
 import java.util.HashMap;
 import java.util.List;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 import javax.net.ssl.HttpsURLConnection;
 
@@ -40,6 +44,29 @@ public class RestaurantDataManager {
     public HashMap<String, Restaurant> getRestaurants() {
         return restaurants;
     }
+
+    public List<Restaurant> getRestaurants(final HazardRating recentRating, double distance) {
+        List<Object> holder = restaurants.values().stream().filter(new Predicate<Restaurant>() {
+            @Override
+            public boolean test(Restaurant restaurant) {
+                return restaurant.getInspections().get(0).getHazardRating() == recentRating
+                        && checkDistance(restaurant, -1);
+            }
+        }).collect(Collectors.toList());
+
+        ArrayList<Restaurant> returnList = new ArrayList<>();
+        for (Object r : holder) {
+            returnList.add((Restaurant) r);
+        }
+
+        return returnList;
+    }
+
+    private Boolean checkDistance(Restaurant restaurant, double distance) {
+        // TODO: Check distance
+        return true;
+    }
+
 
     private void loadRestaurants() {
         AsyncTask.execute(new Runnable() {
