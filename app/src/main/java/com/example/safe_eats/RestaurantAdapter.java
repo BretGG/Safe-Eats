@@ -62,7 +62,7 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.Vi
         Context context = parent.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
 
-        View listView = inflater.inflate(R.layout.recycler_row_layout, parent, false);
+        View listView = inflater.inflate(R.layout.row_layout, parent, false);
         ViewHolder viewHolder = new ViewHolder(listView, onRestaurantClickListener);
 
         return viewHolder;

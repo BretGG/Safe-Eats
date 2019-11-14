@@ -1,24 +1,24 @@
 package com.example.safe_eats;
 
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ProgressBar;
-import android.widget.TextView;
 
 import com.google.gson.Gson;
 
 import java.util.List;
 
-public class RestaurantListViewActivity extends AppCompatActivity implements RestaurantAdapter.OnRestaurantClickListener {
+public class RestaurantListFragment extends Fragment implements RestaurantAdapter.OnRestaurantClickListener {
 
     private List<Restaurant> restaurantsList;
 
@@ -29,13 +29,13 @@ public class RestaurantListViewActivity extends AppCompatActivity implements Res
 
     EditText etSearchKeyword;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_restaurant_list_view);
+    public View onCreateView(@NonNull LayoutInflater inflater,
+                             ViewGroup container, Bundle savedInstanceState) {
+        View v = inflater.inflate(R.layout.fragment_list, container, false);
 
-        etSearchKeyword = findViewById(R.id.etKeywordSearch);
-        Button btnSearch = findViewById(R.id.btnKeywordSearch);
+        // TODO Replace commented section with the actual keyword search EditText and Button widget
+//        etSearchKeyword = v.findViewById(R.id.etKeywordSearch);
+//        Button btnSearch = v.findViewById(R.id.btnKeywordSearch);
 
         manager = new RestaurantDataManager();
         try {
@@ -45,27 +45,29 @@ public class RestaurantListViewActivity extends AppCompatActivity implements Res
         }
 
         restaurantsList = manager.getRestaurantList();
-        rvRestaurant = findViewById(R.id.rvRestaurant);
-        layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+        rvRestaurant = v.findViewById(R.id.rvRestaurant);
+        layoutManager = new LinearLayoutManager(v.getContext(), LinearLayoutManager.VERTICAL, false);
 
-        btnSearch.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String keyword = etSearchKeyword.getText().toString().trim();
+//        btnSearch.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                String keyword = etSearchKeyword.getText().toString().trim();
+//
+//                if (!keyword.isEmpty()) {
+//                    updateViewFromKeywordSearch(keyword);
+//                } else {
+//                    resetList();
+//                }
+//
+//                etSearchKeyword.setText("");
+//            }
+//        });
 
-                if (!keyword.isEmpty()) {
-                    updateViewFromKeywordSearch(keyword);
-                } else {
-                    resetList();
-                }
-
-                etSearchKeyword.setText("");
-            }
-        });
+        return v;
     }
 
     @Override
-    protected void onStart() {
+    public void onStart() {
         super.onStart();
 
         adapter = new RestaurantAdapter(restaurantsList, this);
@@ -78,7 +80,7 @@ public class RestaurantListViewActivity extends AppCompatActivity implements Res
     public void onItemClick(int position) {
         Restaurant clicked = restaurantsList.get(position);
 
-        Intent intent = new Intent(this, DetailActivity.class);
+        Intent intent = new Intent(getActivity(), DetailActivity.class);
         intent.putExtra("Restaurant", (new Gson()).toJson(clicked));
         startActivity(intent);
     }
