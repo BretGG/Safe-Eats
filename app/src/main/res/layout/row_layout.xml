@@ -21,14 +21,14 @@
             android:maxLines="2"
             android:scrollHorizontally="false"
             android:textSize="20sp"
-            android:text="Dinasty"/>
+            android:text="@string/placeholder"/>
 
         <TextView
             android:id="@+id/tvRestaurantAddress"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="15sp"
-            android:text="7488 lansdowne rd"/>
+            android:text="@string/placeholder"/>
 
     </LinearLayout>
 
@@ -43,7 +43,7 @@
         android:layout_height="match_parent"
         android:textSize="25dp"
         android:gravity="center"
-        android:text="GOOD"/>
+        android:text="@string/placeholder"/>
 
 
 </LinearLayout>

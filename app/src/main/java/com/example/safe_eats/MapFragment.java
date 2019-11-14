@@ -31,6 +31,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
     private boolean mLocationPermissionGranted = false;
     GoogleMap mMap;
     RestaurantDataManager manager = MapsActivity.manager;
+
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
@@ -40,7 +41,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
 
         return v;
     }
-
 
     @Override
     public void onMapReady (GoogleMap googleMap){
@@ -60,6 +60,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
         }
         mMap.setOnMarkerClickListener(this);
     }
+
     private void getLocationPermission() {
         /*
          * Request location permission, so that we can get the location of the
@@ -78,6 +79,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
                     PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
         }
     }
+
     @Override
     public void onRequestPermissionsResult(int requestCode,
                                            @NonNull String permissions[],
@@ -95,6 +97,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
         }
         updateLocationUI();
     }
+
     private void updateLocationUI() {
         if (mMap == null) {
             return;
