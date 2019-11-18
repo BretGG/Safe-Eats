@@ -13,8 +13,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
-
 
 import com.google.gson.Gson;
 
@@ -29,34 +27,14 @@ public class RestaurantListFragment extends Fragment implements RestaurantAdapte
     private LinearLayoutManager layoutManager;
     private RestaurantAdapter adapter;
 
-    EditText etSearchKeyword;
-
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
         View v = inflater.inflate(R.layout.fragment_list, container, false);
 
-        // TODO Replace commented section with the actual keyword search EditText and Button widget
-//        etSearchKeyword = v.findViewById(R.id.etKeywordSearch);
-//        Button btnSearch = v.findViewById(R.id.btnKeywordSearch);
+        MapsActivity.rest_detail.setVisibility(View.INVISIBLE);
 
         restaurantsList = RestaurantDataManager.getRestaurantList();
         rvRestaurant = v.findViewById(R.id.rvRestaurant);
         layoutManager = new LinearLayoutManager(v.getContext(), LinearLayoutManager.VERTICAL, false);
-
-//        btnSearch.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                String keyword = etSearchKeyword.getText().toString().trim();
-//
-//                if (!keyword.isEmpty()) {
-//                    updateViewFromKeywordSearch(keyword);
-//                } else {
-//                    resetList();
-//                }
-//
-//                etSearchKeyword.setText("");
-//            }
-//        });
 
         return v;
     }

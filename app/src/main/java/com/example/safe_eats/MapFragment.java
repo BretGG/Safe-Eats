@@ -1,5 +1,6 @@
 package com.example.safe_eats;
 
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
@@ -19,6 +20,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.gson.Gson;
 
 import java.util.HashMap;
 
@@ -27,6 +29,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
     private boolean mLocationPermissionGranted = false;
     GoogleMap mMap;
     RestaurantDataManager manager = MapsActivity.manager;
+    Restaurant clickedRestaurant;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -34,6 +37,15 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
         View v =  inflater.inflate(R.layout.fragment_map, container, false);
         SupportMapFragment mapfragment = (SupportMapFragment)getChildFragmentManager().findFragmentById(R.id.map);
         mapfragment.getMapAsync(this);
+
+        MapsActivity.rest_detail.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(), DetailActivity.class);
+                intent.putExtra("Restaurant", (new Gson()).toJson(clickedRestaurant));
+                startActivity(intent);
+            }
+        });
 
         return v;
     }
@@ -116,10 +128,10 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
     @Override
     public boolean onMarkerClick(Marker marker) {
         MapsActivity.rest_detail.setVisibility(View.VISIBLE);
-        Restaurant restaurant= (Restaurant) marker.getTag();
-        String content  = marker.getTitle() + '\n' + restaurant.getAddress();
-        if(restaurant.getInspections().size() != 0){
-            content += "" + "\t\t\t" + restaurant.getInspections().get(0).getHazardRating();
+        clickedRestaurant = (Restaurant) marker.getTag();
+        String content  = marker.getTitle() + '\n' + clickedRestaurant.getAddress();
+        if(clickedRestaurant.getInspections().size() != 0){
+            content += "" + "\t\t\t" + clickedRestaurant.getInspections().get(0).getHazardRating();
         }
         MapsActivity.rest_detail.setText(content);
         Log.d("Tag", marker.getTitle());

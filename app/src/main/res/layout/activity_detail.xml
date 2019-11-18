@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+
+<LinearLayout xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -13,9 +14,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/placeholder"
-        android:textSize="25sp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:textSize="30sp"
+         />
 
     <TextView
         android:id="@+id/tvDetailAddress"
@@ -24,76 +24,107 @@
         android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp"
         android:text="@string/placeholder"
-        android:textSize="18dp"
-        app:layout_constraintBottom_toTopOf="@+id/tvDetailLabelYear"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvDetailName" />
+        android:textSize="18dp"/>
 
     <TextView
-        android:id="@+id/tvDetailLabelYear"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="@string/inspection_year_label"
-        android:textSize="18sp"
+        android:textSize="19sp"
         android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tvDetailAddress" />
+        android:text="Inspection list: "/>
 
-    <TextView
-        android:id="@+id/tvDetailYear"
-        android:layout_width="wrap_content"
+    <Spinner
+        android:id="@+id/spinner"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:text="2019"
-        android:textSize="18sp"
-        app:layout_constraintBaseline_toBaselineOf="@+id/tvDetailLabelYear"
-        app:layout_constraintStart_toEndOf="@+id/tvDetailLabelYear" />
+        android:background="@color/colorWhite"
+        android:spinnerMode="dropdown"/>
 
-    <TextView
-        android:id="@+id/tvDetailHazardLabel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="@string/hazardous_label"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvDetailLabelYear" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_marginTop="10dp">
 
-    <TextView
-        android:id="@+id/tvDetailHazard"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:text="LOW"
-        android:textSize="18sp"
-        app:layout_constraintBaseline_toBaselineOf="@+id/tvDetailHazardLabel"
-        app:layout_constraintStart_toEndOf="@+id/tvDetailHazardLabel" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
 
-    <TextView
-        android:id="@+id/tvDetailLabelDescription"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:text="@string/description_label"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvDetailHazardLabel" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="19sp"
+                android:textStyle="bold"
+                android:text="Inspection Type: "/>
 
-    <TextView
-        android:id="@+id/tvDetailDescription"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginTop="8dp"
-        android:text="\t\t301,Critical,Equipment/utensils/food contact surfaces not maintained in sanitary condition [s. 17(1)],\n\n\t\tNot Repeat|302,Critical,Equipment/utensils/food contact surfaces not properly washed and sanitized [s. 17(2)],\n\n\t\tNot Repeat|304,Not Critical,Premises not free of pests [s. 26(a)],\n\n\t\tNot Repeat|306,Not Critical,Food premises not maintained in a sanitary condition [s. 17(1)],\n\n\t\tNot Repeat|308,Not Critical,Equipment/utensils/food contact surfaces are not in good working order [s. 16(b)],\n\n\t\tNot Repeat|315,Not Critical,Refrigeration units and hot holding equipment lack accurate thermometers [s. 19(2)],Not Repeat"
-        android:textSize="18dp"
-        android:scrollbars="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvDetailLabelDescription"
-        app:layout_constraintVertical_bias="0.0" />
+            <TextView
+                android:id="@+id/tvDetailType"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="19sp"
+                android:text="Follow-Up"/>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="5dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="19sp"
+                android:textStyle="bold"
+                android:text="Critical: "/>
+
+            <TextView
+                android:id="@+id/tvDetailCritNum"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="19sp"
+                android:text="2"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="30dp"
+                android:textSize="19sp"
+                android:textStyle="bold"
+                android:text="Non-Critical: "/>
+
+            <TextView
+                android:id="@+id/tvDetailNonCritNum"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="19sp"
+                android:text="4"/>
+
+        </LinearLayout>
+
+
+        <TextView
+            android:id="@+id/tvDetailLabelDescription"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:text="@string/description_label"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tvDetailDescription"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="8dp"
+            android:scrollbars="vertical"
+            android:text="\t\t301,Critical,Equipment/utensils/food contact surfaces not maintained in sanitary condition [s. 17(1)],\n\n\t\tNot Repeat|302,Critical,Equipment/utensils/food contact surfaces not properly washed and sanitized [s. 17(2)],\n\n\t\tNot Repeat|304,Not Critical,Premises not free of pests [s. 26(a)],\n\n\t\tNot Repeat|306,Not Critical,Food premises not maintained in a sanitary condition [s. 17(1)],\n\n\t\tNot Repeat|308,Not Critical,Equipment/utensils/food contact surfaces are not in good working order [s. 16(b)],\n\n\t\tNot Repeat|315,Not Critical,Refrigeration units and hot holding equipment lack accurate thermometers [s. 19(2)],Not Repeat"
+            android:textSize="18dp" />
+
+    </LinearLayout>
+
+
+
+</LinearLayout>
