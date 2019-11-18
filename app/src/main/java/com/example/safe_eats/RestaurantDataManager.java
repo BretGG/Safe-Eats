@@ -25,6 +25,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.net.ssl.HttpsURLConnection;
 
@@ -39,11 +40,7 @@ public class RestaurantDataManager {
         addInspectionsToRestaurantsWhenDataReady();
     }
 
-    static public HashMap<String, Restaurant> getRestaurants() {
-        return restaurants;
-    }
-
-    static public List<Restaurant> getRestaurantList() {
+    static public List<Restaurant> getRestaurants() {
         return new ArrayList<>(restaurants.values());
     }
 
@@ -65,6 +62,7 @@ public class RestaurantDataManager {
             returnList.add((Restaurant) r);
         }
 
+        Stream<Restaurant> str = restaurants.values().stream();
         return returnList;
     }
 
@@ -319,7 +317,7 @@ public class RestaurantDataManager {
                     // data not ready yet
                     if (!(inspectionDataLoaded && restaurantDataLoaded)) {
                         try {
-                            Thread.sleep(1000);
+                            Thread.sleep(250);
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
