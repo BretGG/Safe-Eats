@@ -22,15 +22,17 @@ public class RestaurantListFragment extends Fragment implements RestaurantAdapte
 
     private List<Restaurant> restaurantsList;
 
-    private RestaurantDataManager manager = MapsActivity.manager;
     private RecyclerView rvRestaurant;
     private LinearLayoutManager layoutManager;
     private RestaurantAdapter adapter;
+
+    private int lastVisiblePosition;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_list, container, false);
 
         MapsActivity.rest_detail.setVisibility(View.INVISIBLE);
+        lastVisiblePosition = 0;
 
         restaurantsList = RestaurantDataManager.getRestaurantList();
         rvRestaurant = v.findViewById(R.id.rvRestaurant);
@@ -49,7 +51,15 @@ public class RestaurantListFragment extends Fragment implements RestaurantAdapte
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        layoutManager.scrollToPosition(lastVisiblePosition);
+    }
+
+    @Override
     public void onItemClick(int position) {
+        lastVisiblePosition = layoutManager.findFirstCompletelyVisibleItemPosition();
+
         Restaurant clicked = restaurantsList.get(position);
         Intent intent = new Intent(getActivity(), DetailActivity.class);
         intent.putExtra("Restaurant", (new Gson()).toJson(clicked));

@@ -20,6 +20,7 @@
             android:layout_height="wrap_content"
             android:maxLines="2"
             android:scrollHorizontally="false"
+            android:textColor="@color/colorPrimary"
             android:textSize="20sp"
             android:text="@string/placeholder"/>
 

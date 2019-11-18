@@ -95,6 +95,7 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.Vi
                 break;
             case NoResult:
                 textViewInspection.setTextColor(Color.BLACK);
+                break;
             default:
                 textViewInspection.setTextColor(Color.parseColor(COLOR_HIGH));
         }

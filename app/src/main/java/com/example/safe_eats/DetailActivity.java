@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -33,6 +34,11 @@ public class DetailActivity extends AppCompatActivity implements AdapterView.OnI
         String clickedRestaurantJson = getIntent().getStringExtra("Restaurant");
         restaurant = (new Gson()).fromJson(clickedRestaurantJson, Restaurant.class);
 
+        if (restaurant.getInspections().isEmpty()) {
+            Toast.makeText(this, "Restaurant have no inspection records.", Toast.LENGTH_LONG).show();
+            finish();
+        }
+
         Spinner spinner = findViewById(R.id.spinner);
 
         InspectionSpinnerAdapter adapter = new InspectionSpinnerAdapter(getApplicationContext(), restaurant.getInspections());
@@ -44,7 +50,6 @@ public class DetailActivity extends AppCompatActivity implements AdapterView.OnI
     @Override
     protected void onStart() {
         super.onStart();
-        Inspection latestInspections = restaurant.getInspections().get(0);
 
         tvName = findViewById(R.id.tvDetailName);
         tvAddress = findViewById(R.id.tvDetailAddress);
@@ -57,9 +62,6 @@ public class DetailActivity extends AppCompatActivity implements AdapterView.OnI
 
         tvName.setText(restaurant.getName());
         tvAddress.setText(restaurant.getAddress());
-        tvType.setText(latestInspections.getInspectionType().toString());
-        tvCrit.setText(String.valueOf(latestInspections.getNumCritical()));
-        tvNonCrit.setText(String.valueOf(latestInspections.getNumNonCritical()));
     }
 
     @Override
@@ -81,12 +83,38 @@ public class DetailActivity extends AppCompatActivity implements AdapterView.OnI
         if (selectedInspection.getDescription().equals("")) {
             tvDescription.setText(R.string.no_description);
         } else {
-            tvDescription.setText(selectedInspection.getDescription());
+            tvDescription.setText(
+                    getReadableDescription(selectedInspection.getDescription()));
         }
+
+        tvDescription.scrollTo(0, 0);
     }
 
     @Override
     public void onNothingSelected(AdapterView<?> adapterView) {
 
+    }
+
+    public String getReadableDescription(String desc) {
+
+        String result = "";
+        int startOfLine = 0;
+        int endOfLine = 0;
+
+        for (int i = 0; i < desc.length(); i++) {
+
+            if (desc.charAt(i) == '[') {
+                endOfLine = i;
+            } else if (desc.charAt(i) == '|') {
+                result += desc.substring(startOfLine, endOfLine);
+                result += "\n\n";
+
+                startOfLine = i + 1;
+            } else if (i == desc.length() - 1) {
+                result += desc.substring(startOfLine, endOfLine);
+            }
+        }
+
+        return result;
     }
 }
