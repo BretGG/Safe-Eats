@@ -26,25 +26,6 @@ public class Restaurant {
     @SerializedName("CITY")
     private String city;
 
-    Inspection getLatestInspection() {
-
-        if (inspections.isEmpty()) {
-            return null;
-        }
-
-        Inspection latestInspection = inspections.get(0);
-
-        for (Inspection inspection : inspections) {
-            Date date = inspection.getInspectionDate();
-
-            if (date.compareTo(latestInspection.getInspectionDate()) > 0) {
-                latestInspection = inspection;
-            }
-        }
-
-        return latestInspection;
-    }
-
     private ArrayList<Inspection> inspections;
 
     public LatLng getLocation() {

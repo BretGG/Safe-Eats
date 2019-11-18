@@ -14,5 +14,12 @@
     <string name="inspection_year_label">Inspection Year:</string>
     <string name="hazardous_label">Hazardous:</string>
     <string name="description_label">Description</string>
-
+    <string name="srch">Search</string>
+    <string-array name="rating_array">
+        <item>Low</item>
+        <item>Moderate</item>
+        <item>High</item>
+    </string-array>
+    <string name="apply">Apply</string>
+    <string name="cancel">Cancel</string>
 </resources>

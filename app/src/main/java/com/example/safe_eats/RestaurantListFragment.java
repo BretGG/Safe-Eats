@@ -1,18 +1,20 @@
 package com.example.safe_eats;
 
+
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
+
 
 import com.google.gson.Gson;
 
@@ -37,7 +39,7 @@ public class RestaurantListFragment extends Fragment implements RestaurantAdapte
 //        etSearchKeyword = v.findViewById(R.id.etKeywordSearch);
 //        Button btnSearch = v.findViewById(R.id.btnKeywordSearch);
 
-        restaurantsList = manager.getRestaurantList();
+        restaurantsList = RestaurantDataManager.getRestaurantList();
         rvRestaurant = v.findViewById(R.id.rvRestaurant);
         layoutManager = new LinearLayoutManager(v.getContext(), LinearLayoutManager.VERTICAL, false);
 
@@ -62,7 +64,6 @@ public class RestaurantListFragment extends Fragment implements RestaurantAdapte
     @Override
     public void onStart() {
         super.onStart();
-
         adapter = new RestaurantAdapter(restaurantsList, this);
         rvRestaurant.setAdapter(adapter);
         rvRestaurant.setLayoutManager(layoutManager);
@@ -72,20 +73,19 @@ public class RestaurantListFragment extends Fragment implements RestaurantAdapte
     @Override
     public void onItemClick(int position) {
         Restaurant clicked = restaurantsList.get(position);
-
         Intent intent = new Intent(getActivity(), DetailActivity.class);
         intent.putExtra("Restaurant", (new Gson()).toJson(clicked));
         startActivity(intent);
     }
 
     private void updateViewFromKeywordSearch(String keyword) {
-        restaurantsList = manager.filterByName(keyword);
+        restaurantsList = RestaurantDataManager.filterByName(keyword);
         adapter.setList(restaurantsList);
         adapter.notifyDataSetChanged();
     }
 
     private void resetList() {
-        restaurantsList = manager.getRestaurantList();
+        restaurantsList = RestaurantDataManager.getRestaurantList();
         adapter.setList(restaurantsList);
         adapter.notifyDataSetChanged();
     }

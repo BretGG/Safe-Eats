@@ -6,15 +6,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProviders;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -55,8 +51,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
         HashMap<String, Restaurant> restaurants = manager.getRestaurants();
 
         for (Restaurant holder : restaurants.values()) {
-            mMap.addMarker(new MarkerOptions()
+            Marker m = mMap.addMarker(new MarkerOptions()
                     .position(holder.getLocation()).title(holder.getName()));
+            m.setTag(holder);
         }
         mMap.setOnMarkerClickListener(this);
     }
@@ -119,7 +116,12 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
     @Override
     public boolean onMarkerClick(Marker marker) {
         MapsActivity.rest_detail.setVisibility(View.VISIBLE);
-        MapsActivity.rest_detail.setText(marker.getTitle());
+        Restaurant restaurant= (Restaurant) marker.getTag();
+        String content  = marker.getTitle() + '\n' + restaurant.getAddress();
+        if(restaurant.getInspections().size() != 0){
+            content += "" + "\t\t\t" + restaurant.getInspections().get(0).getHazardRating();
+        }
+        MapsActivity.rest_detail.setText(content);
         Log.d("Tag", marker.getTitle());
         return false;
     }

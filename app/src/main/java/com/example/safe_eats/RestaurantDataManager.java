@@ -1,13 +1,8 @@
 package com.example.safe_eats;
 
 import android.os.AsyncTask;
-import android.util.JsonReader;
-import android.widget.ArrayAdapter;
-import android.widget.Toast;
 
-import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -19,10 +14,13 @@ import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.sql.Date;
-import java.time.Year;
+
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Dictionary;
+import java.text.DecimalFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Comparator;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.function.Predicate;
@@ -30,11 +28,10 @@ import java.util.stream.Collectors;
 
 import javax.net.ssl.HttpsURLConnection;
 
-import retrofit2.Retrofit;
 
 public class RestaurantDataManager {
 
-    public RestaurantDataManager() {
+    static public void initializeRestaurantDataManager() {
         restaurants = new HashMap<String, Restaurant>();
         inspections = new ArrayList<Inspection>();
         loadRestaurants();
@@ -42,20 +39,20 @@ public class RestaurantDataManager {
         addInspectionsToRestaurantsWhenDataReady();
     }
 
-    public HashMap<String, Restaurant> getRestaurants() {
+    static public HashMap<String, Restaurant> getRestaurants() {
         return restaurants;
     }
 
-    public List<Restaurant> getRestaurantList() {
+    static public List<Restaurant> getRestaurantList() {
         return new ArrayList<>(restaurants.values());
     }
 
-    public List<Restaurant> getRestaurants(final HazardRating recentRating, double distance) {
+    static public List<Restaurant> getRestaurants(final HazardRating recentRating, final double distance, final LatLng startingLoc) {
         List<Object> holder = restaurants.values().stream().filter(new Predicate<Restaurant>() {
             @Override
             public boolean test(Restaurant restaurant) {
                 return restaurant.getInspections().get(0).getHazardRating() == recentRating
-                        && checkDistance(restaurant, -1);
+                        && checkDistance(restaurant, distance, startingLoc);
             }
         }).collect(Collectors.toList());
 
@@ -67,20 +64,37 @@ public class RestaurantDataManager {
         return returnList;
     }
 
-    private Boolean checkDistance(Restaurant restaurant, double distance) {
-        // TODO: Check distance
-        return true;
+    static public void waitForInitialization() {
+        while (!initialized) {
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    static private Boolean checkDistance(Restaurant restaurant, double distanceM, LatLng startingLoc) {
+        LatLng loc = restaurant.getLocation();
+
+        double latDist = distanceM/MetToDegreeEst;
+        double longDist = distanceM * Math.cos(loc.latitude)/MetToDegreeEst;
+
+        Boolean inLat = Math.abs(startingLoc.latitude - loc.latitude) <= latDist;
+        Boolean inDist = Math.abs(startingLoc.longitude - loc.longitude) <= longDist;
+
+        return inLat && inDist;
     }
 
 
-    private void loadRestaurants() {
+    static private void loadRestaurants() {
         AsyncTask.execute(new Runnable() {
             @Override
             public void run() {
                 // Create URL
                 URL restaurantEndpoint = null;
                 try {
-                    restaurantEndpoint = new URL("https://data.surrey.ca/api/action/datastore_search?resource_id=0e5d04a2-be9b-40fe-8de2-e88362ea916b");
+                    restaurantEndpoint = new URL("https://data.surrey.ca/api/action/datastore_search?resource_id=0e5d04a2-be9b-40fe-8de2-e88362ea916b&limit=10000");
                 } catch (MalformedURLException e) {
                     e.printStackTrace();
                 }
@@ -114,14 +128,14 @@ public class RestaurantDataManager {
         });
     }
 
-    private void loadInspections() {
+    static private void loadInspections() {
         AsyncTask.execute(new Runnable() {
             @Override
             public void run() {
                 // Create URL
                 URL inspectionEndpoint = null;
                 try {
-                    inspectionEndpoint = new URL("https://data.surrey.ca/api/action/datastore_search?resource_id=30b38b66-649f-4507-a632-d5f6f5fe87f1&limit=200");
+                    inspectionEndpoint = new URL("https://data.surrey.ca/api/action/datastore_search?resource_id=30b38b66-649f-4507-a632-d5f6f5fe87f1&limit=10000");
                 } catch (MalformedURLException e) {
                     e.printStackTrace();
                 }
@@ -144,9 +158,8 @@ public class RestaurantDataManager {
                         parseInspectionJSON(jsonArr);
 
                         connection.disconnect();
-                    } else {
-                        // Throw something out the window
-                    }
+                    }  // Throw something out the window
+
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -155,11 +168,10 @@ public class RestaurantDataManager {
         });
     }
 
-    public List<Restaurant> filterByName(String name) {
+    static public List<Restaurant> filterByName(String name) {
         List<Restaurant> filteredList = new ArrayList<>();
-        List<Restaurant> list = getRestaurantList();
 
-        for (Restaurant res : list) {
+        for (Restaurant res : restaurants.values()) {
             String rName = res.getName().toLowerCase();
 
             if (rName.contains(name.toLowerCase())) {
@@ -177,7 +189,7 @@ public class RestaurantDataManager {
      * @param name
      * @return
      */
-    private String processName(String name) {
+    static private String processName(String name) {
         int toRemoveS = 0; // start of to remove char
         int toRemoveE = 0; // end of to remove char
         boolean getRemoveE = false; // start looking for end of remove char
@@ -201,7 +213,7 @@ public class RestaurantDataManager {
         }
     }
 
-    private void parseRestaurantJSON(JsonArray jsonArray) throws IOException {
+    static private void parseRestaurantJSON(JsonArray jsonArray) throws IOException {
         String name;
         String trackingNumber;
         String address;
@@ -209,10 +221,12 @@ public class RestaurantDataManager {
         double latitude;
         double longitude;
 
+        restaurants.clear();
+
         for (final JsonElement objElem : jsonArray) {
             final JsonObject jsonObj = objElem.getAsJsonObject();
             name = processName(jsonObj.get("NAME").getAsString());
-            trackingNumber = jsonObj.get("TRACKINGNUMBER").getAsString();
+            trackingNumber = jsonObj.get("TRACKINGNUMBER").getAsString().trim();
             address = jsonObj.get("PHYSICALADDRESS").getAsString();
             city = jsonObj.get("PHYSICALCITY").getAsString();
             longitude = jsonObj.get("LATITUDE").getAsDouble();
@@ -226,7 +240,7 @@ public class RestaurantDataManager {
         }
     }
 
-    private void parseInspectionJSON(JsonArray jsonArray) throws IOException {
+    static private void parseInspectionJSON(JsonArray jsonArray) throws IOException {
         int id;
         int inspectionDate;
         int numCritical;
@@ -236,6 +250,9 @@ public class RestaurantDataManager {
         HazardRating hRating;
         InspectionType iType;
 
+        inspections.clear();
+        SimpleDateFormat formatDate = new SimpleDateFormat("yyyyMMdd");
+
         for (final JsonElement objElem : jsonArray) {
             final JsonObject jsonObj = objElem.getAsJsonObject();
 
@@ -243,30 +260,41 @@ public class RestaurantDataManager {
             inspectionDate = jsonObj.get("InspectionDate").getAsInt();
             numCritical = jsonObj.get("NumCritical").getAsInt();
             numNonCritical = jsonObj.get("NumNonCritical").getAsInt();
-            trackingNumber = jsonObj.get("TrackingNumber").getAsString();
+            trackingNumber = jsonObj.get("TrackingNumber").getAsString().trim();
             description = jsonObj.get("ViolLump").getAsString();
             hRating = stringToHazard(jsonObj.get("HazardRating").getAsString());
             iType = stringToInspectionType(jsonObj.get("InspType").getAsString());
 
             Inspection insp = new Inspection(trackingNumber, id);
-            insp.setInspectionDate(new Date(inspectionDate));
             insp.setNumCritical(numCritical);
             insp.setNumNonCritical(numNonCritical);
             insp.setDescription(description);
             insp.setHazardRating(hRating);
             insp.setInspectionType(iType);
 
+            try {
+                insp.setInspectionDate(formatDate.parse(Integer.toString(inspectionDate)));
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
             inspections.add(insp);
         }
+
+        inspections.sort(new Comparator<Inspection>() {
+            @Override
+            public int compare(Inspection o1, Inspection o2) {
+                return o2.getInspectionDate().compareTo(o2.getInspectionDate());
+            }
+        });
     }
 
-    private void addInspectionsToRestaurantsWhenDataReady() {
+    static private void addInspectionsToRestaurantsWhenDataReady() {
 
         AsyncTask.execute(new Runnable() {
             @Override
             public void run() {
-                Boolean finished = false;
-                while (!finished) {
+                while (!initialized) {
 
                     // data not ready yet
                     if (!(inspectionDataLoaded && restaurantDataLoaded)) {
@@ -284,13 +312,13 @@ public class RestaurantDataManager {
                             rest.addInspection(insp);
                     }
 
-                    finished = true; // Stop loop
+                    initialized = true; // Stop loop
                 }
             }
         });
     }
 
-    private InspectionType stringToInspectionType(String insp) {
+    static private InspectionType stringToInspectionType(String insp) {
         switch (insp) {
             case "Routine":
                 return InspectionType.Routine;
@@ -301,7 +329,7 @@ public class RestaurantDataManager {
         }
     }
 
-    private HazardRating stringToHazard(String haz) {
+    static private HazardRating stringToHazard(String haz) {
         switch (haz) {
             case "Low":
                 return HazardRating.Low;
@@ -314,8 +342,10 @@ public class RestaurantDataManager {
         }
     }
 
-    private HashMap<String, Restaurant> restaurants;
-    private ArrayList<Inspection> inspections;
-    private Boolean restaurantDataLoaded = false;
-    private Boolean inspectionDataLoaded = false;
+    static private HashMap<String, Restaurant> restaurants;
+    static private ArrayList<Inspection> inspections;
+    static private Boolean restaurantDataLoaded = false;
+    static private Boolean inspectionDataLoaded = false;
+    static private Boolean initialized = false;
+    static private double MetToDegreeEst = 111111;
 }
