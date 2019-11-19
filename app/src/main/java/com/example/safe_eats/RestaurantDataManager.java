@@ -49,10 +49,15 @@ public class RestaurantDataManager {
 
     static public List<Restaurant> getRestaurants(final HazardRating recentRating, final double distance, final LatLng startingLoc) {
         List<Object> holder = restaurants.values().stream().filter(new Predicate<Restaurant>() {
+            boolean ratingMatch;
             @Override
             public boolean test(Restaurant restaurant) {
-                return restaurant.getInspections().get(0).getHazardRating() == recentRating
-                        && checkDistance(restaurant, distance, startingLoc);
+                if(restaurant.getInspections().size()>0){
+                    ratingMatch = restaurant.getInspections().get(0).getHazardRating() == recentRating;
+                } else{
+                    int x =5;
+                }
+                return ratingMatch&& checkDistance(restaurant, distance, startingLoc);
             }
         }).collect(Collectors.toList());
 
