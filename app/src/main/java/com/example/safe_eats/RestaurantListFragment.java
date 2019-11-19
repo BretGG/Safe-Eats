@@ -34,7 +34,7 @@ public class RestaurantListFragment extends Fragment implements RestaurantAdapte
         MapsActivity.rest_detail.setVisibility(View.INVISIBLE);
         lastVisiblePosition = 0;
 
-        restaurantsList = RestaurantDataManager.getRestaurantList();
+        restaurantsList = RestaurantDataManager.getRestaurants();
         rvRestaurant = v.findViewById(R.id.rvRestaurant);
         layoutManager = new LinearLayoutManager(v.getContext(), LinearLayoutManager.VERTICAL, false);
 
@@ -73,7 +73,7 @@ public class RestaurantListFragment extends Fragment implements RestaurantAdapte
     }
 
     private void resetList() {
-        restaurantsList = RestaurantDataManager.getRestaurantList();
+        restaurantsList = RestaurantDataManager.getRestaurants();
         adapter.setList(restaurantsList);
         adapter.notifyDataSetChanged();
     }

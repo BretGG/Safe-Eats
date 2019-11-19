@@ -22,7 +22,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.gson.Gson;
 
-import java.util.HashMap;
+import java.util.List;
 
 public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
     private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 100;
@@ -60,9 +60,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
 
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(surreyCentral,15));
         updateLocationUI();
-        HashMap<String, Restaurant> restaurants = manager.getRestaurants();
+        List<Restaurant> restaurants = manager.getRestaurants();
 
-        for (Restaurant holder : restaurants.values()) {
+        for (Restaurant holder : restaurants) {
             Marker m = mMap.addMarker(new MarkerOptions()
                     .position(holder.getLocation()).title(holder.getName()));
             m.setTag(holder);
