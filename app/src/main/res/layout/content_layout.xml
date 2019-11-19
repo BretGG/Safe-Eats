@@ -18,16 +18,61 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:navGraph="@navigation/mobile_navigation" />
-
-    <TextView
-        android:id="@+id/rest_detail"
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/rest_layout"
         android:layout_width="0dp"
-        android:layout_height="50dp"
-        android:background="@android:color/white"
+        android:layout_height="70dp"
+        android:orientation="horizontal"
         android:visibility="gone"
+        android:background="@android:color/holo_orange_light"
         app:layout_constraintBottom_toBottomOf="@+id/nav_host_fragment"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        android:weightSum="4"
+        >
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_weight="2"
+            >
+            <TextView
+                android:id="@+id/rest_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textMultiLine"
+                android:textSize="18dp"
+                android:textColor="@color/common_google_signin_btn_text_dark_focused" />
+            <TextView
+                android:id="@+id/rest_address"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/common_google_signin_btn_text_dark_focused" />
+        </LinearLayout>
+        <TextView
+            android:id="@+id/rest_rating"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textColor="@color/common_google_signin_btn_text_dark_focused"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:padding="5dp"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/circle_background"
+            android:textSize="20dp"
+            android:textFontWeight="700"/>
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/detail"
+            android:layout_weight="1">
+
+        </Button>
+
+    </LinearLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>
 <!--<fragment xmlns:android="http://schemas.android.com/apk/res/android"-->
 <!--    xmlns:map="http://schemas.android.com/apk/res-auto"-->

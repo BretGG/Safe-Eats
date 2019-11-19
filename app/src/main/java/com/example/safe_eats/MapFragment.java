@@ -20,20 +20,23 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-import java.util.HashMap;
 import java.util.List;
 
 public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
     private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 100;
     private boolean mLocationPermissionGranted = false;
-    GoogleMap mMap;
+    static SupportMapFragment mapfragment;
+
+
+    public static GoogleMap mMap;
     RestaurantDataManager manager = MapsActivity.manager;
 
+    public LatLng surreyCentral = new LatLng(49.1896, -122.8479);
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
         View v =  inflater.inflate(R.layout.fragment_map, container, false);
-        SupportMapFragment mapfragment = (SupportMapFragment)getChildFragmentManager().findFragmentById(R.id.map);
+        mapfragment = (SupportMapFragment)getChildFragmentManager().findFragmentById(R.id.map);
         mapfragment.getMapAsync(this);
 
         return v;
@@ -44,15 +47,16 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
         mMap = googleMap;
         getLocationPermission();
 
-        LatLng surreyCentral = new LatLng(49.1896, -122.8479);
-
 
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(surreyCentral,15));
         updateLocationUI();
 //        List<Restaurant> restaurants = manager.getRestaurants(HazardRating.High, 10000, surreyCentral);
-        HashMap<String, Restaurant> restaurants = manager.getRestaurants();
+//        if (!getArguments().getParcelableArrayList("restaurants").isEmpty()){
+//            List<Restaurant> restaurants = getArguments().getParcelableArrayList("restaurants");
+//        }
+        List<Restaurant> restaurants = manager.getRestaurants();
 
-        for (Restaurant holder : restaurants.values()) {
+        for (Restaurant holder : restaurants) {
             Marker m = mMap.addMarker(new MarkerOptions()
                     .position(holder.getLocation()).title(holder.getName()));
             m.setTag(holder);
@@ -117,15 +121,19 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
 
     @Override
     public boolean onMarkerClick(Marker marker) {
-        MapsActivity.rest_detail.setVisibility(View.VISIBLE);
+        MapsActivity.rest_layout.setVisibility(View.VISIBLE);
         Restaurant restaurant= (Restaurant) marker.getTag();
-        String content  = marker.getTitle() + '\n' + restaurant.getAddress();
+        MapsActivity.rest_title.setText(marker.getTitle());
+        MapsActivity.rest_address.setText(restaurant.getAddress());
         if(restaurant.getInspections().size() != 0){
-            content += "" + "\t\t\t" + restaurant.getInspections().get(0).getHazardRating();
+            MapsActivity.rest_rating.setText(RestaurantDataManager
+                    .convertRating(restaurant.getInspections()
+                            .get(0).getHazardRating()));
         }
-        MapsActivity.rest_detail.setText(content);
-        Log.d("Tag", marker.getTitle());
         return false;
+    }
+    public GoogleMap getmMap() {
+        return mMap;
     }
 }
 

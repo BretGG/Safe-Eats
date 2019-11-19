@@ -26,7 +26,7 @@ public class RestaurantListFragment extends Fragment implements RestaurantAdapte
     RestaurantDataManager manager = MapsActivity.manager;
     RecyclerView rvRestaurant;
     LinearLayoutManager layoutManager;
-    RestaurantAdapter adapter;
+    public static RestaurantAdapter adapter;
     private List<Restaurant> restaurantsList;
     EditText etSearchKeyword;
 
@@ -34,10 +34,10 @@ public class RestaurantListFragment extends Fragment implements RestaurantAdapte
                              ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_list, container, false);
 
-        restaurantsList = manager.getRestaurantList();
+        restaurantsList = manager.getRestaurants();
         rvRestaurant = v.findViewById(R.id.rvRestaurant);
         layoutManager = new LinearLayoutManager(v.getContext(), LinearLayoutManager.VERTICAL, false);
-
+        MapsActivity.rest_layout.setVisibility(View.GONE);
         return v;
     }
 
@@ -65,7 +65,7 @@ public class RestaurantListFragment extends Fragment implements RestaurantAdapte
     }
 
     private void resetList() {
-        restaurantsList = manager.getRestaurantList();
+        restaurantsList = manager.getRestaurants();
         adapter.setList(restaurantsList);
         adapter.notifyDataSetChanged();
     }

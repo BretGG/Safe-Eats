@@ -25,6 +25,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.net.ssl.HttpsURLConnection;
 
@@ -39,11 +40,7 @@ public class RestaurantDataManager {
         addInspectionsToRestaurantsWhenDataReady();
     }
 
-    static public HashMap<String, Restaurant> getRestaurants() {
-        return restaurants;
-    }
-
-    static public List<Restaurant> getRestaurantList() {
+    static public List<Restaurant> getRestaurants() {
         return new ArrayList<>(restaurants.values());
     }
 
@@ -52,12 +49,29 @@ public class RestaurantDataManager {
             boolean ratingMatch;
             @Override
             public boolean test(Restaurant restaurant) {
-                if(restaurant.getInspections().size()>0){
-                    ratingMatch = restaurant.getInspections().get(0).getHazardRating() == recentRating;
-                } else{
-                    int x =5;
+                if (restaurant.getInspections().size() > 0) {
+                    return restaurant.getInspections().get(0).getHazardRating() == recentRating
+                            && checkDistance(restaurant, distance, startingLoc);
+                } else {
+                    return false;
                 }
-                return ratingMatch&& checkDistance(restaurant, distance, startingLoc);
+            }
+        }).collect(Collectors.toList());
+
+        ArrayList<Restaurant> returnList = new ArrayList<>();
+        for (Object r : holder) {
+            returnList.add((Restaurant) r);
+        }
+
+        Stream<Restaurant> str = restaurants.values().stream();
+        return returnList;
+    }
+
+    static public List<Restaurant> getRestaurants(final double distance, final LatLng startingLoc) {
+        List<Object> holder = restaurants.values().stream().filter(new Predicate<Restaurant>() {
+            @Override
+            public boolean test(Restaurant restaurant) {
+                return checkDistance(restaurant, distance, startingLoc);
             }
         }).collect(Collectors.toList());
 
@@ -67,6 +81,31 @@ public class RestaurantDataManager {
         }
 
         return returnList;
+    }
+
+    static public HazardRating convertRatingString(String rating){
+        switch (rating){
+            case "Safe":
+                return HazardRating.Low;
+            case "Moderate":
+                return HazardRating.Moderate;
+            case "Not Clean":
+                return HazardRating.High;
+            default:
+                return HazardRating.NoResult;
+        }
+    }
+    static public String convertRating(HazardRating rating){
+        switch (rating){
+            case Low:
+                return "Safe";
+            case Moderate:
+                return "Moderate";
+            case High:
+                return "Not Clean";
+            default:
+                return "No Result";
+        }
     }
 
     static public void waitForInitialization() {
@@ -82,8 +121,8 @@ public class RestaurantDataManager {
     static private Boolean checkDistance(Restaurant restaurant, double distanceM, LatLng startingLoc) {
         LatLng loc = restaurant.getLocation();
 
-        double latDist = distanceM/MetToDegreeEst;
-        double longDist = distanceM * Math.cos(loc.latitude)/MetToDegreeEst;
+        double latDist = distanceM / MetToDegreeEst;
+        double longDist = distanceM * Math.cos(loc.latitude) / MetToDegreeEst;
 
         Boolean inLat = Math.abs(startingLoc.latitude - loc.latitude) <= latDist;
         Boolean inDist = Math.abs(startingLoc.longitude - loc.longitude) <= longDist;
@@ -183,7 +222,6 @@ public class RestaurantDataManager {
                 filteredList.add(res);
             }
         }
-
         return filteredList;
     }
 
@@ -304,7 +342,7 @@ public class RestaurantDataManager {
                     // data not ready yet
                     if (!(inspectionDataLoaded && restaurantDataLoaded)) {
                         try {
-                            Thread.sleep(1000);
+                            Thread.sleep(250);
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
