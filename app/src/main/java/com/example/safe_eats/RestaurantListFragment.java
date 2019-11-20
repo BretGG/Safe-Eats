@@ -13,9 +13,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.EditText;
-
 
 import com.google.gson.Gson;
 
@@ -23,18 +20,27 @@ import java.util.List;
 
 public class RestaurantListFragment extends Fragment implements RestaurantAdapter.OnRestaurantClickListener {
 
+
     RestaurantDataManager manager = MapsActivity.manager;
     RecyclerView rvRestaurant;
     LinearLayoutManager layoutManager;
     public static RestaurantAdapter adapter;
-    private List<Restaurant> restaurantsList;
-    EditText etSearchKeyword;
 
-    public View onCreateView(@NonNull LayoutInflater inflater,
-                             ViewGroup container, Bundle savedInstanceState) {
+    private List<Restaurant> restaurantsList;
+
+
+    private int lastVisiblePosition;
+
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_list, container, false);
 
+
         restaurantsList = manager.getRestaurants();
+
+        MapsActivity.rest_layout.setVisibility(View.INVISIBLE);
+        lastVisiblePosition = 0;
+
+
         rvRestaurant = v.findViewById(R.id.rvRestaurant);
         layoutManager = new LinearLayoutManager(v.getContext(), LinearLayoutManager.VERTICAL, false);
         MapsActivity.rest_layout.setVisibility(View.GONE);
@@ -51,7 +57,15 @@ public class RestaurantListFragment extends Fragment implements RestaurantAdapte
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        layoutManager.scrollToPosition(lastVisiblePosition);
+    }
+
+    @Override
     public void onItemClick(int position) {
+        lastVisiblePosition = layoutManager.findFirstCompletelyVisibleItemPosition();
+
         Restaurant clicked = restaurantsList.get(position);
         Intent intent = new Intent(getActivity(), DetailActivity.class);
         intent.putExtra("Restaurant", (new Gson()).toJson(clicked));
@@ -59,13 +73,15 @@ public class RestaurantListFragment extends Fragment implements RestaurantAdapte
     }
 
     private void updateViewFromKeywordSearch(String keyword) {
-        restaurantsList = manager.filterByName(keyword);
+        restaurantsList = RestaurantDataManager.filterByName(keyword);
         adapter.setList(restaurantsList);
         adapter.notifyDataSetChanged();
     }
 
     private void resetList() {
+
         restaurantsList = manager.getRestaurants();
+
         adapter.setList(restaurantsList);
         adapter.notifyDataSetChanged();
     }

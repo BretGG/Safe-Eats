@@ -8,17 +8,20 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import android.annotation.SuppressLint;
 import android.app.SearchManager;
 
+
 import android.content.Context;
+
 import android.os.Bundle;
-import android.util.Log;
-import android.view.LayoutInflater;
+
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
+
+
 import android.view.inputmethod.InputMethodManager;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
+
+
 import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -26,9 +29,9 @@ import android.widget.Toast;
 import androidx.appcompat.widget.Toolbar;
 
 import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.Fragment;
+
 import androidx.navigation.NavController;
-import androidx.navigation.NavDestination;
+
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
@@ -38,6 +41,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.navigation.NavigationView;
+
 
 import java.util.List;
 import java.util.Map;
@@ -80,6 +84,7 @@ public class MapsActivity extends AppCompatActivity  {
 
 
         navController = Navigation.findNavController(this, R.id.nav_host_fragment);
+
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(mNavigationView, navController);
 

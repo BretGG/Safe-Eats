@@ -1,5 +1,6 @@
 package com.example.safe_eats;
 
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
@@ -19,6 +20,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.gson.Gson;
 
 import java.util.List;
 
@@ -30,6 +32,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
 
     public static GoogleMap mMap;
     RestaurantDataManager manager = MapsActivity.manager;
+    Restaurant clickedRestaurant;
 
     public LatLng surreyCentral = new LatLng(49.1896, -122.8479);
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -38,6 +41,15 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
         View v =  inflater.inflate(R.layout.fragment_map, container, false);
         mapfragment = (SupportMapFragment)getChildFragmentManager().findFragmentById(R.id.map);
         mapfragment.getMapAsync(this);
+
+        MapsActivity.rest_layout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(), DetailActivity.class);
+                intent.putExtra("Restaurant", (new Gson()).toJson(clickedRestaurant));
+                startActivity(intent);
+            }
+        });
 
         return v;
     }
@@ -129,6 +141,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
             MapsActivity.rest_rating.setText(RestaurantDataManager
                     .convertRating(restaurant.getInspections()
                             .get(0).getHazardRating()));
+
         }
         return false;
     }

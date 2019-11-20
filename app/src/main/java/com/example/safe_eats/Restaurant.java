@@ -5,6 +5,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 public class Restaurant {
     public Restaurant(String name, String trackingNumber, String address, String city) {
