@@ -40,6 +40,7 @@ import androidx.navigation.ui.NavigationUI;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.navigation.NavigationView;
 
 
@@ -56,6 +57,7 @@ public class MapsActivity extends AppCompatActivity  {
     static TextView rest_title;
     static TextView rest_address;
     static TextView rest_rating;
+    static MaterialButton rest_btn_detail;
     public double[] latlng;
     SearchView searchView;
     NavController navController;
@@ -78,6 +80,7 @@ public class MapsActivity extends AppCompatActivity  {
         rest_title = findViewById(R.id.rest_title);
         rest_address = findViewById(R.id.rest_address);
         rest_rating = findViewById(R.id.rest_rating);
+        rest_btn_detail = findViewById(R.id.rest_detail);
         mNavigationView  = findViewById(R.id.nav_view);
         mDrawerLayout = findViewById(R.id.drawer_layout);
         mAppBarConfiguration = new AppBarConfiguration.Builder(R.id.nav_map, R.id.nav_list).setDrawerLayout(mDrawerLayout).build();

@@ -33,16 +33,14 @@ public class DetailActivity extends AppCompatActivity implements AdapterView.OnI
 
         String clickedRestaurantJson = getIntent().getStringExtra("Restaurant");
         restaurant = (new Gson()).fromJson(clickedRestaurantJson, Restaurant.class);
-        /////////doesn't seem like working
+
         if (restaurant.getInspections().size() == 0) {
             Toast.makeText(this, "Restaurant have no inspection records.", Toast.LENGTH_LONG).show();
             finish();
         }
 
         Spinner spinner = findViewById(R.id.spinner);
-
         InspectionSpinnerAdapter adapter = new InspectionSpinnerAdapter(getApplicationContext(), restaurant.getInspections());
-
         spinner.setAdapter(adapter);
         spinner.setOnItemSelectedListener(this);
     }
@@ -92,7 +90,7 @@ public class DetailActivity extends AppCompatActivity implements AdapterView.OnI
 
     @Override
     public void onNothingSelected(AdapterView<?> adapterView) {
-
+        // Do nothing
     }
 
     public String getReadableDescription(String desc) {

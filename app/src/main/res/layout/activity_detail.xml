@@ -6,7 +6,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="20dp"
+    android:padding="@dimen/activity_detail_padding"
+    android:background="@color/colorWhite"
     tools:context=".DetailActivity">
 
     <TextView
@@ -14,32 +15,33 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/placeholder"
-        android:textSize="28sp"
+        android:textSize="@dimen/text_size_28"
         android:textColor="@color/colorPrimary"
-         />
+        />
 
     <TextView
         android:id="@+id/tvDetailAddress"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginTop="@dimen/activity_detail_margin"
+        android:layout_marginBottom="@dimen/activity_detail_margin"
         android:text="@string/placeholder"
-        android:textSize="18dp"/>
+        android:textSize="@dimen/text_size_18"/>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="19sp"
         android:textStyle="bold"
-        android:text="Inspection list: "/>
+        android:text="@string/inspection_list_label"/>
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:padding="8dp"
-        android:background="#DCDCDC">
+        android:layout_marginTop="@dimen/activity_detail_margin"
+        android:padding="@dimen/activity_detail_spinner_padding"
+        android:background="@color/colorLightGrey">
+
         <Spinner
             android:id="@+id/spinner"
             style="@style/Widget.AppCompat.DropDownItem.Spinner"
@@ -62,16 +64,16 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="19sp"
+                android:textSize="@dimen/text_size_19"
                 android:textStyle="bold"
-                android:text="Inspection Type: "/>
+                android:text="@string/inspection_type_label"/>
 
             <TextView
                 android:id="@+id/tvDetailType"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="19sp"
-                android:text="Follow-Up"/>
+                android:textSize="@dimen/text_size_19"
+                android:text="@string/placeholder"/>
 
         </LinearLayout>
 
@@ -84,15 +86,15 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="19sp"
+                android:textSize="@dimen/text_size_19"
                 android:textStyle="bold"
-                android:text="Critical: "/>
+                android:text="@string/critical_label"/>
 
             <TextView
                 android:id="@+id/tvDetailCritNum"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="19sp"
+                android:textSize="@dimen/text_size_19"
                 android:text="2"/>
 
             <TextView

@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -17,6 +18,8 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.Vi
     private static final String COLOR_LOW = "#2dc937";
     private static final String COLOR_MODERATE = "#e7b416";
     private static final String COLOR_HIGH = "#cc3232";
+    private static final String COLOR_GREY = "#eeeeee";
+    private static final String COLOR_WHITE = "#ffffff";
 
     private List<Restaurant> list;
     private OnRestaurantClickListener onRestaurantClickListener;
@@ -35,6 +38,7 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.Vi
         public TextView tvName;
         public TextView tvAddr;
         public TextView tvInspect;
+        public LinearLayout listItemLayout;
 
         OnRestaurantClickListener onRestaurantClickListener;
 
@@ -44,6 +48,7 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.Vi
             tvName = v.findViewById(R.id.tvRestaurantName);
             tvAddr = v.findViewById(R.id.tvRestaurantAddress);
             tvInspect = v.findViewById(R.id.tvRestaurantCondition);
+            listItemLayout = v.findViewById(R.id.listItemLayout);
             this.onRestaurantClickListener = onRestaurantClickListener;
 
             v.setOnClickListener(this);
@@ -76,6 +81,13 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.Vi
         TextView textViewAddr = viewholder.tvAddr;
         TextView textViewInspection = viewholder.tvInspect;
         HazardRating hazardRating = HazardRating.NoResult;
+        LinearLayout listItemLayout = viewholder.listItemLayout;
+
+        if (position % 2 == 0) {
+            listItemLayout.setBackgroundColor(Color.parseColor(COLOR_WHITE));
+        } else {
+            listItemLayout.setBackgroundColor(Color.parseColor(COLOR_GREY));
+        }
 
         if(restaurant.getInspections().size() >0){
             hazardRating = restaurant.getInspections().get(0).getHazardRating();
@@ -83,11 +95,7 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.Vi
 
         textViewName.setText(restaurant.getName());
         textViewAddr.setText(restaurant.getAddress());
-
-        textViewInspection.setText(RestaurantDataManager.convertRating(restaurant.getInspections().get(0).getHazardRating()));
-        // TODO Add color scheme for inspection condition.
-
-
+        textViewInspection.setText(RestaurantDataManager.convertRating(hazardRating));
 
         switch (hazardRating) {
             case Low:

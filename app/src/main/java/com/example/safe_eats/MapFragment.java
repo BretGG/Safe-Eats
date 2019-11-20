@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
@@ -24,7 +25,8 @@ import com.google.gson.Gson;
 
 import java.util.List;
 
-public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
+public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener,
+        GoogleMap.OnInfoWindowClickListener {
     private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 100;
     private boolean mLocationPermissionGranted = false;
     static SupportMapFragment mapfragment;
@@ -35,6 +37,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
     Restaurant clickedRestaurant;
 
     public LatLng surreyCentral = new LatLng(49.1896, -122.8479);
+
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
@@ -42,12 +45,10 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
         mapfragment = (SupportMapFragment)getChildFragmentManager().findFragmentById(R.id.map);
         mapfragment.getMapAsync(this);
 
-        MapsActivity.rest_layout.setOnClickListener(new View.OnClickListener() {
+        MapsActivity.rest_btn_detail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getActivity(), DetailActivity.class);
-                intent.putExtra("Restaurant", (new Gson()).toJson(clickedRestaurant));
-                startActivity(intent);
+                startDetailActivity();
             }
         });
 
@@ -74,6 +75,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
             m.setTag(holder);
         }
         mMap.setOnMarkerClickListener(this);
+        mMap.setOnInfoWindowClickListener(this);
     }
 
     private void getLocationPermission() {
@@ -143,8 +145,23 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
                             .get(0).getHazardRating()));
 
         }
+
+        clickedRestaurant = restaurant;
+
         return false;
     }
+
+    @Override
+    public void onInfoWindowClick(Marker marker) {
+        startDetailActivity();
+    }
+
+    private void startDetailActivity() {
+        Intent intent = new Intent(getActivity(), DetailActivity.class);
+        intent.putExtra("Restaurant", (new Gson()).toJson(clickedRestaurant));
+        startActivity(intent);
+    }
+
     public GoogleMap getmMap() {
         return mMap;
     }

@@ -63,6 +63,7 @@
             app:cornerRadius="50dp"
             android:textFontWeight="700"/>
         <com.google.android.material.button.MaterialButton
+            android:id="@+id/rest_detail"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="@string/detail"

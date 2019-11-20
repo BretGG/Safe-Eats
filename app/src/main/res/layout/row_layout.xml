@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/listItemLayout"
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginStart="10dp"
-    android:layout_marginEnd="10dp"
-    android:minHeight="100dp"
-    android:padding="8dp">
+    android:paddingStart="10dp"
+    android:paddingEnd="10dp"
+    android:minHeight="100dp">
 
     <LinearLayout
         android:layout_width="wrap_content"

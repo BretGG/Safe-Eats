@@ -27,5 +27,8 @@
     <string name="detail">Detail</string>
 
     <string name="no_description">No description</string>
+    <string name="inspection_list_label">Inspection list:</string>
+    <string name="inspection_type_label">Inspection Type:</string>
+    <string name="critical_label">Critical:</string>
 
 </resources>
