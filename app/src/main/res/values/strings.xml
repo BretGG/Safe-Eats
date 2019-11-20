@@ -11,15 +11,21 @@
     <string name="drawer_open">Open Drawer</string>
     <string name="drawer_close">Close Drawer</string>
     <string name="placeholder">Text</string>
-    <string name="inspection_year_label">Inspection Year:</string>
+    <string name="inspection_year_label">Year:</string>
     <string name="hazardous_label">Hazardous:</string>
     <string name="description_label">Description</string>
     <string name="srch">Search</string>
     <string-array name="rating_array">
-        <item>Low</item>
+        <item>All</item>
+        <item>Safe</item>
         <item>Moderate</item>
-        <item>High</item>
+        <item>Not Clean</item>
     </string-array>
     <string name="apply">Apply</string>
     <string name="cancel">Cancel</string>
+
+    <string name="detail">Detail</string>
+
+    <string name="no_description">No description</string>
+
 </resources>
