@@ -26,7 +26,12 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
+import com.google.android.gms.common.api.ResultTransform;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.material.navigation.NavigationView;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class MapsActivity extends AppCompatActivity  {
@@ -42,13 +47,14 @@ public class MapsActivity extends AppCompatActivity  {
         RestaurantDataManager.initializeRestaurantDataManager();
         RestaurantDataManager.waitForInitialization();
 
-
+        LatLng surreyCentral = new LatLng(49.1896, -122.8479);
         setContentView(R.layout.activity_maps);
+
+        List<Restaurant> restaurants = RestaurantDataManager.getRestaurants("subway", 5000, surreyCentral);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        rest_detail = findViewById(R.id.rest_detail);
-        mNavigationView  = findViewById(R.id.nav_view);
+        rest_detail = findViewById(R.id.rest_detail);        mNavigationView  = findViewById(R.id.nav_view);
         mDrawerLayout = findViewById(R.id.drawer_layout);
         mAppBarConfiguration = new AppBarConfiguration.Builder(R.id.nav_map, R.id.nav_list).setDrawerLayout(mDrawerLayout).build();
 

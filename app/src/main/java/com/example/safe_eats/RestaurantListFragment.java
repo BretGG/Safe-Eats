@@ -34,7 +34,7 @@ public class RestaurantListFragment extends Fragment implements RestaurantAdapte
                              ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_list, container, false);
 
-        restaurantsList = manager.getRestaurantList();
+        restaurantsList = RestaurantDataManager.getRestaurants();
         rvRestaurant = v.findViewById(R.id.rvRestaurant);
         layoutManager = new LinearLayoutManager(v.getContext(), LinearLayoutManager.VERTICAL, false);
 
@@ -65,7 +65,7 @@ public class RestaurantListFragment extends Fragment implements RestaurantAdapte
     }
 
     private void resetList() {
-        restaurantsList = manager.getRestaurantList();
+        restaurantsList = RestaurantDataManager.getRestaurants();
         adapter.setList(restaurantsList);
         adapter.notifyDataSetChanged();
     }

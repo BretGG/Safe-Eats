@@ -13,14 +13,10 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.sql.Date;
-
-import java.util.ArrayList;
-import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Comparator;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.function.Predicate;
@@ -44,6 +40,76 @@ public class RestaurantDataManager {
         return new ArrayList<>(restaurants.values());
     }
 
+    /**
+     * Get restaurants filtered by the name, the distance from startingLoc, and the hazard rating
+     *
+     * @param search
+     * @param distance
+     * @param startingLoc
+     * @return restaurants withing distance, names containing search string, and the hazard rating matches
+     */
+    static public List<Restaurant> getRestaurants(final HazardRating recentRating, final String search, final double distance, final LatLng startingLoc) {
+        List<Object> holder = restaurants.values().stream().filter(new Predicate<Restaurant>() {
+            @Override
+            public boolean test(Restaurant restaurant) {
+                if (restaurant.getInspections().size() > 0) {
+                    return restaurant.getName().toLowerCase().contains(search.toLowerCase().trim())
+                            && restaurant.getInspections().get(0).getHazardRating() == recentRating
+                            && checkDistance(restaurant, distance, startingLoc);
+                } else {
+                    return false;
+                }
+            }
+        }).collect(Collectors.toList());
+
+        ArrayList<Restaurant> returnList = new ArrayList<>();
+        for (Object r : holder) {
+            returnList.add((Restaurant) r);
+        }
+
+        Stream<Restaurant> str = restaurants.values().stream();
+        return returnList;
+    }
+
+    /**
+     * Get restaurants filtered by the name and the distance from startingLoc
+     *
+     * @param search
+     * @param distance
+     * @param startingLoc
+     * @return restaurants withing distance and names containing search string
+     */
+    static public List<Restaurant> getRestaurants(final String search, final double distance, final LatLng startingLoc) {
+        List<Object> holder = restaurants.values().stream().filter(new Predicate<Restaurant>() {
+            @Override
+            public boolean test(Restaurant restaurant) {
+                if (restaurant.getInspections().size() > 0) {
+                    return restaurant.getName().toLowerCase().contains(search.toLowerCase().trim())
+                            && checkDistance(restaurant, distance, startingLoc);
+                } else {
+                    return false;
+                }
+            }
+        }).collect(Collectors.toList());
+
+        ArrayList<Restaurant> returnList = new ArrayList<>();
+        for (Object r : holder) {
+            returnList.add((Restaurant) r);
+        }
+
+        Stream<Restaurant> str = restaurants.values().stream();
+        return returnList;
+    }
+
+
+    /**
+     * Get restaurants filtered by the distance from the startingLoc and the given hazard rating
+     *
+     * @param recentRating
+     * @param distance
+     * @param startingLoc
+     * @return restaurants withing distance and match given rating
+     */
     static public List<Restaurant> getRestaurants(final HazardRating recentRating, final double distance, final LatLng startingLoc) {
         List<Object> holder = restaurants.values().stream().filter(new Predicate<Restaurant>() {
             @Override
@@ -66,6 +132,13 @@ public class RestaurantDataManager {
         return returnList;
     }
 
+    /**
+     * Get restaurants filtered by the distance from the startingLoc
+     *
+     * @param distance
+     * @param startingLoc
+     * @return restaurants within the distance
+     */
     static public List<Restaurant> getRestaurants(final double distance, final LatLng startingLoc) {
         List<Object> holder = restaurants.values().stream().filter(new Predicate<Restaurant>() {
             @Override
