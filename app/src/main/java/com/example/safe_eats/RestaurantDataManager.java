@@ -31,7 +31,11 @@ import javax.net.ssl.HttpsURLConnection;
 
 
 public class RestaurantDataManager {
-
+    static public class filter{
+        static String keyword;
+        static HazardRating harzardRating;
+        static int distance  = 10000;
+    }
     static public void initializeRestaurantDataManager() {
         restaurants = new HashMap<String, Restaurant>();
         inspections = new ArrayList<Inspection>();
@@ -46,6 +50,7 @@ public class RestaurantDataManager {
 
     static public List<Restaurant> getRestaurants(final HazardRating recentRating, final double distance, final LatLng startingLoc) {
         List<Object> holder = restaurants.values().stream().filter(new Predicate<Restaurant>() {
+            boolean ratingMatch;
             @Override
             public boolean test(Restaurant restaurant) {
                 if (restaurant.getInspections().size() > 0) {
@@ -80,6 +85,31 @@ public class RestaurantDataManager {
         }
 
         return returnList;
+    }
+
+    static public HazardRating convertRatingString(String rating){
+        switch (rating){
+            case "Safe":
+                return HazardRating.Low;
+            case "Moderate":
+                return HazardRating.Moderate;
+            case "Not Clean":
+                return HazardRating.High;
+            default:
+                return HazardRating.NoResult;
+        }
+    }
+    static public String convertRating(HazardRating rating){
+        switch (rating){
+            case Low:
+                return "Safe";
+            case Moderate:
+                return "Moderate";
+            case High:
+                return "Not Clean";
+            default:
+                return "No Result";
+        }
     }
 
     static public void waitForInitialization() {
@@ -196,7 +226,6 @@ public class RestaurantDataManager {
                 filteredList.add(res);
             }
         }
-
         return filteredList;
     }
 

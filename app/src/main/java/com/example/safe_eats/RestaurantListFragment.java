@@ -20,24 +20,30 @@ import java.util.List;
 
 public class RestaurantListFragment extends Fragment implements RestaurantAdapter.OnRestaurantClickListener {
 
+
+    RestaurantDataManager manager = MapsActivity.manager;
+    RecyclerView rvRestaurant;
+    LinearLayoutManager layoutManager;
+    public static RestaurantAdapter adapter;
+
     private List<Restaurant> restaurantsList;
 
-    private RecyclerView rvRestaurant;
-    private LinearLayoutManager layoutManager;
-    private RestaurantAdapter adapter;
 
     private int lastVisiblePosition;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_list, container, false);
 
-        MapsActivity.rest_detail.setVisibility(View.INVISIBLE);
+
+        restaurantsList = manager.getRestaurants();
+
+        MapsActivity.rest_layout.setVisibility(View.INVISIBLE);
         lastVisiblePosition = 0;
 
-        restaurantsList = RestaurantDataManager.getRestaurants();
+
         rvRestaurant = v.findViewById(R.id.rvRestaurant);
         layoutManager = new LinearLayoutManager(v.getContext(), LinearLayoutManager.VERTICAL, false);
-
+        MapsActivity.rest_layout.setVisibility(View.GONE);
         return v;
     }
 
@@ -73,7 +79,9 @@ public class RestaurantListFragment extends Fragment implements RestaurantAdapte
     }
 
     private void resetList() {
-        restaurantsList = RestaurantDataManager.getRestaurants();
+
+        restaurantsList = manager.getRestaurants();
+
         adapter.setList(restaurantsList);
         adapter.notifyDataSetChanged();
     }

@@ -33,8 +33,8 @@ public class DetailActivity extends AppCompatActivity implements AdapterView.OnI
 
         String clickedRestaurantJson = getIntent().getStringExtra("Restaurant");
         restaurant = (new Gson()).fromJson(clickedRestaurantJson, Restaurant.class);
-
-        if (restaurant.getInspections().isEmpty()) {
+        /////////doesn't seem like working
+        if (restaurant.getInspections().size() == 0) {
             Toast.makeText(this, "Restaurant have no inspection records.", Toast.LENGTH_LONG).show();
             finish();
         }
