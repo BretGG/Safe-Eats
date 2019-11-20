@@ -2,6 +2,8 @@ package com.example.safe_eats;
 
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -137,11 +139,20 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
         Restaurant restaurant= (Restaurant) marker.getTag();
         MapsActivity.rest_title.setText(marker.getTitle());
         MapsActivity.rest_address.setText(restaurant.getAddress());
-        if(restaurant.getInspections().size() != 0){
-            MapsActivity.rest_rating.setText(RestaurantDataManager
-                    .convertRating(restaurant.getInspections()
-                            .get(0).getHazardRating()));
 
+        if(restaurant.getInspections().size() != 0){
+            HazardRating rating = restaurant.getInspections().get(0).getHazardRating();
+            if(rating==HazardRating.High){
+                MapsActivity.rest_rating.setBackgroundColor(Color.parseColor("#d10606"));
+            } else if(rating==HazardRating.Moderate){
+                MapsActivity.rest_rating.setBackgroundColor(Color.parseColor("#d1b306"));
+            } else {
+                MapsActivity.rest_rating.setBackgroundColor(Color.parseColor("#08cc0f"));
+            }
+            MapsActivity.rest_rating.setText(RestaurantDataManager.convertRating(rating));
+        } else {
+            MapsActivity.rest_rating.setText("No Result");
+            MapsActivity.rest_rating.setBackgroundColor(Color.BLACK);
         }
         return false;
     }
