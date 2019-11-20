@@ -31,7 +31,11 @@ import javax.net.ssl.HttpsURLConnection;
 
 
 public class RestaurantDataManager {
-
+    static public class filter{
+        static String keyword;
+        static HazardRating harzardRating;
+        static int distance  = 10000;
+    }
     static public void initializeRestaurantDataManager() {
         restaurants = new HashMap<String, Restaurant>();
         inspections = new ArrayList<Inspection>();

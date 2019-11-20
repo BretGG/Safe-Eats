@@ -5,18 +5,23 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import android.annotation.SuppressLint;
 import android.app.SearchManager;
 
 import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.SearchView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.widget.Toolbar;
 
@@ -27,6 +32,7 @@ import androidx.navigation.NavDestination;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
+
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.model.Marker;
@@ -51,14 +57,17 @@ public class MapsActivity extends AppCompatActivity  {
     NavController navController;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
+
+
+        //////////////////////////////////////
         RestaurantDataManager.initializeRestaurantDataManager();
         RestaurantDataManager.waitForInitialization();
-        latlng = new double[]{49.1896, -122.8497};
 
         setContentView(R.layout.activity_maps);
 
+
+        latlng = new double[]{49.1896, -122.8497};
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         rest_layout = findViewById(R.id.rest_layout);
@@ -98,24 +107,29 @@ public class MapsActivity extends AppCompatActivity  {
             public boolean onQueryTextSubmit(String restoName) {
                 if(MapFragment.mapfragment.isVisible()){
                     List<Restaurant> restaurants = RestaurantDataManager.filterByName(restoName);
-                    MapFragment.mMap.clear();
-                    for (Restaurant holder : restaurants) {
-                        Marker m = MapFragment.mMap.addMarker(new MarkerOptions()
-                                .position(holder.getLocation()).title(holder.getName()));
-                        m.setTag(holder);
+                    if(restaurants.size() == 0){
+                        Toast toast = Toast.makeText(getApplicationContext(), "No search Result", Toast.LENGTH_LONG);
+                        toast.show();
+                    }else{
+                        MapFragment.mMap.clear();
+                        for (Restaurant holder : restaurants) {
+                            Marker m = MapFragment.mMap.addMarker(new MarkerOptions()
+                                    .position(holder.getLocation()).title(holder.getName()));
+                            m.setTag(holder);
+                        }
+                        MapFragment.mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(restaurants.get(0).getLocation(),15));
+                        rest_title.setVisibility(View.VISIBLE);
+                        Restaurant restaurant= restaurants.get(0);
+                        MapsActivity.rest_title.setText(restaurant.getName());
+                        MapsActivity.rest_address.setText(restaurant.getAddress());
+                        if(restaurant.getInspections().size() != 0){
+                            MapsActivity.rest_rating.setText(RestaurantDataManager
+                                    .convertRating(restaurant.getInspections()
+                                            .get(0).getHazardRating()));
+                        }
+                        InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+                        imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
                     }
-                    MapFragment.mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(restaurants.get(0).getLocation(),15));
-                    rest_title.setVisibility(View.VISIBLE);
-                    Restaurant restaurant= restaurants.get(0);
-                    MapsActivity.rest_title.setText(restaurant.getName());
-                    MapsActivity.rest_address.setText(restaurant.getAddress());
-                    if(restaurant.getInspections().size() != 0){
-                        MapsActivity.rest_rating.setText(RestaurantDataManager
-                                .convertRating(restaurant.getInspections()
-                                        .get(0).getHazardRating()));
-                    }
-                    InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-                    imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
                 } else {
                     List<Restaurant> restaurants = RestaurantDataManager.filterByName(restoName);
                     RestaurantListFragment.adapter.setList(restaurants);

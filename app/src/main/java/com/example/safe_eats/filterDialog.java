@@ -44,12 +44,18 @@ public class filterDialog extends DialogFragment {
                                     seekBar.getProgress()*1000,
                                     currentLoc);
                         }
-                        MapFragment.mMap.clear();
-                        for (Restaurant holder : restaurants) {
-                            Marker m = MapFragment.mMap.addMarker(new MarkerOptions()
-                                    .position(holder.getLocation()).title(holder.getName()));
-                            m.setTag(holder);
+                        if(MapFragment.mapfragment.isVisible()){
+                            MapFragment.mMap.clear();
+                            for (Restaurant holder : restaurants) {
+                                Marker m = MapFragment.mMap.addMarker(new MarkerOptions()
+                                        .position(holder.getLocation()).title(holder.getName()));
+                                m.setTag(holder);
+                            }
+                        }else{
+                            RestaurantListFragment.adapter.setList(restaurants);
+                            RestaurantListFragment.adapter.notifyDataSetChanged();
                         }
+
                     }
                 })
                 .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
@@ -57,7 +63,6 @@ public class filterDialog extends DialogFragment {
 
                     }
                 });
-
 
         AlertDialog alertDialog = builder.create();
 

@@ -26,6 +26,8 @@
         android:layout_height="70dp"
         android:orientation="horizontal"
         android:visibility="gone"
+        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
+        app:behavior_hideable = "true"
         android:background="@android:color/holo_orange_light"
         app:layout_constraintBottom_toBottomOf="@+id/nav_host_fragment"
         app:layout_constraintEnd_toEndOf="parent"
@@ -55,22 +57,17 @@
             android:id="@+id/rest_rating"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:textColor="@color/common_google_signin_btn_text_dark_focused"
             android:layout_weight="1"
             android:gravity="center"
-            android:padding="5dp"
-            android:layout_marginTop="5dp"
-            android:background="@drawable/circle_background"
-            android:textSize="20dp"
+            style="@style/Widget.MaterialComponents.Button"
+            app:cornerRadius="50dp"
             android:textFontWeight="700"/>
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="@string/detail"
-            android:layout_weight="1">
-
-        </Button>
-
+            android:layout_weight="1"
+            app:cornerRadius="50dp"/>
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

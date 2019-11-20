@@ -54,7 +54,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
 //        if (!getArguments().getParcelableArrayList("restaurants").isEmpty()){
 //            List<Restaurant> restaurants = getArguments().getParcelableArrayList("restaurants");
 //        }
-        List<Restaurant> restaurants = manager.getRestaurants();
+        List<Restaurant> restaurants = manager.getRestaurants(RestaurantDataManager.filter.distance, surreyCentral);
 
         for (Restaurant holder : restaurants) {
             Marker m = mMap.addMarker(new MarkerOptions()
