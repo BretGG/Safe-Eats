@@ -83,7 +83,10 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.Vi
 
         textViewName.setText(restaurant.getName());
         textViewAddr.setText(restaurant.getAddress());
-        textViewInspection.setText(hazardRating.toString());
+
+        textViewInspection.setText(RestaurantDataManager.convertRating(restaurant.getInspections().get(0).getHazardRating()));
+        // TODO Add color scheme for inspection condition.
+
 
 
         switch (hazardRating) {
