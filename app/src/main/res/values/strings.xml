@@ -1,4 +1,31 @@
 <resources>
     <string name="app_name">Safe-Eats</string>
-    <string name="title_activity_maps">Map</string>
+    <string name="title_activity_maps">Map View</string>
+    <string name="filter">Filter</string>
+    <string name="ftr_rating">Rating</string>
+    <string name="ftr_year">Year</string>
+    <string name="ftr_range">Range</string>
+    <string name="map_view">Map View</string>
+    <string name="list_view">List View</string>
+    <string name="action_settings">Settings</string>
+    <string name="drawer_open">Open Drawer</string>
+    <string name="drawer_close">Close Drawer</string>
+    <string name="placeholder">Text</string>
+    <string name="inspection_year_label">Year:</string>
+    <string name="hazardous_label">Hazardous:</string>
+    <string name="description_label">Description</string>
+    <string name="srch">Search</string>
+    <string-array name="rating_array">
+        <item>All</item>
+        <item>Safe</item>
+        <item>Moderate</item>
+        <item>Not Clean</item>
+    </string-array>
+    <string name="apply">Apply</string>
+    <string name="cancel">Cancel</string>
+
+    <string name="detail">Detail</string>
+
+    <string name="no_description">No description</string>
+
 </resources>

@@ -1,7 +1,6 @@
 package com.example.safe_eats;
 
 import com.google.android.gms.maps.model.LatLng;
-
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
